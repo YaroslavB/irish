@@ -21,6 +21,7 @@ services:
     networks:
       - irish-network
 
+
   mysql:
     image: mysql:8
     container_name: mysql_irish
