@@ -1,20 +1,104 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DefaultController!{% endblock %}
+{% block title %}Homepage - RankedChoice{% endblock %}
+{% block page_keywords %}Jeans, Jackets{% endblock %}
+{% block page_description %}Main page of RankedChoice shop!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="container-fluid mt-2">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="banner banner-big">
+                    <a href="#">
+                        <img src="{{ asset('build/images/banner/collection/banner_1.jpg') }}" alt="banner">
+                    </a>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+                    <div class="banner-content">
+                        <h3 class="banner-subtitle">
+                            New Collection!
+                        </h3>
+                        <h2 class="banner-title">
+                            Jeans
+                        </h2>
+                        <a href="#" class="btn btn-link">
+                            Show me
+                        </a>
+                    </div>
+                </div>
+            </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/var/www/irish/src/Controller/DefaultController.php'|file_link(0) }}">src/Controller/DefaultController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/var/www/irish/templates/default/index.html.twig'|file_link(0) }}">templates/default/index.html.twig</a></code></li>
-    </ul>
-</div>
+            <div class="col-lg-6">
+                <div class="banner banner-big">
+                    <a href="#">
+                        <img src="{{ asset('build/images/banner/collection/banner_2.jpg') }}" alt="banner">
+                    </a>
+
+                    <div class="banner-content">
+                        <h3 class="banner-subtitle">
+                            Discounts Over 50%
+                        </h3>
+                        <h2 class="banner-title">
+                            Jackets
+                        </h2>
+                        <a href="#" class="btn btn-link">
+                            Show me
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-1 justify-content-center align-items-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="banner banner-middle">
+                    <a href="#">
+                        <img src="{{ asset('build/images/banner/collection/banner_3.jpg') }}" alt="banner">
+                    </a>
+
+                    <div class="banner-content">
+                        <h3 class="banner-subtitle">
+                            Unique!
+                        </h3>
+                        <a href="#" class="btn btn-link">
+                            Hats
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="banner banner-middle">
+                    <a href="#">
+                        <img src="{{ asset('build/images/banner/collection/banner_4.jpg') }}" alt="banner">
+                    </a>
+
+                    <div class="banner-content">
+                        <h3 class="banner-subtitle">
+                            Fashionable!
+                        </h3>
+                        <a href="#" class="btn btn-link">
+                            Dresses
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="banner banner-middle">
+                    <a href="#">
+                        <img src="{{ asset('build/images/banner/collection/banner_5.jpg') }}" alt="banner">
+                    </a>
+
+                    <div class="banner-content">
+                        <h3 class="banner-subtitle text-white">
+                            Branded!
+                        </h3>
+                        <a href="#" class="btn btn-link">
+                            Sneakers
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
