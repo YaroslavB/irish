@@ -14,6 +14,7 @@ services:
       context: ./docker/php
     ports:
       - '9000:9000'
+      - '2525:2525'
     volumes:
       - ./:/var/www/irish
     depends_on:
