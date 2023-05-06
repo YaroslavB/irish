@@ -39,6 +39,7 @@ class EmailVerifier
 
         $email->context($context);
 
+        dd($context['signedUrl']);
         $this->mailer->send($email);
     }
 
