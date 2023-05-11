@@ -61,6 +61,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         }
 
          return new RedirectResponse($this->urlGenerator->generate('homepage'));
+        // app_profile
         //throw new Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 

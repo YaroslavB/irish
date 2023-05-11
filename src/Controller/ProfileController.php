@@ -16,28 +16,37 @@ class ProfileController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('main/profile/index.html.twig', [
-        ]);
+        return $this->render(
+            'main/profile/index.html.twig',
+            [
+            ]
+        );
     }
 
     /**
-     * @param  Request                 $request
+     * @param  Request  $request
      * @param  EntityManagerInterface  $entityManager
      * @Route("/profile/edit", name="app_profile_edit")
+     *
      * @return Response
      */
-    public function edit(Request $request,EntityManagerInterface $entityManager):Response
-    {
+    public function edit(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
         $user = $this->getUser();
-        $form = $this->createForm(ProfileEditFormType::class,$user);
+        $form = $this->createForm(ProfileEditFormType::class, $user);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-          $entityManager->persist($user);
-          $entityManager->flush();
-          return $this->redirectToRoute('app_profile');
-        }
-        return $this->render('main/profile/edit.html.twig',
-                             ['form'=>$form->createView()]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($user);
+            $entityManager->flush();
 
+            return $this->redirectToRoute('app_profile');
+        }
+
+        return $this->render(
+            'main/profile/edit.html.twig',
+            ['form' => $form->createView()]
+        );
     }
 }
