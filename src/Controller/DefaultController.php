@@ -22,9 +22,6 @@ class DefaultController extends AbstractController
             ->getRepository(Product::class)
             ->findAll();
 
-        //dd($productList);
-
-
         return $this->render(
             'main/default/index.html.twig',
             [
