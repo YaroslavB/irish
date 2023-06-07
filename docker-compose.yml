@@ -54,3 +54,26 @@ services:
       - php
     networks:
       - irish-network
+
+  mailhog:
+    container_name: mailhog_irish
+    image: mailhog/mailhog
+    ports:
+      - 8025:8025 # UI
+    networks:
+      - irish-network
+
+#  blackfire:
+#    container_name: blackfire_irish
+#    image: blackfire/blackfire:2
+#    environment:
+#      BLACKFIRE_LOG_LEVEL: 4
+#      BLACKFIRE_SERVER_ID: ~
+#      BLACKFIRE_SERVER_TOKEN: ~
+#      BLACKFIRE_CLIENT_ID: ~
+#      BLACKFIRE_CLIENT_TOKEN: ~
+#      BLACKFIRE_DISABLE_LEGACY_PORT: 1
+#    ports:
+#      - 8307:8307
+#    networks:
+#      - irish-network
