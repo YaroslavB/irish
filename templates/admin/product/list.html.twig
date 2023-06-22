@@ -41,7 +41,8 @@
                                    style="color: {% if product.isPublished %}green{% else %}lightgray{% endif %};"></i>
                             </td>
                             <td>
-                                <a href="#" class="btn btn-outline-info">Edit</a>
+                                <a href="{{ path('admin_product_edit',{'id':product.id}) }}"
+                                   class="btn btn-outline-info">Edit</a>
                             </td>
                         </tr>
                     {% endfor %}

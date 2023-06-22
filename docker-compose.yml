@@ -64,6 +64,8 @@ services:
   redis:
     container_name: radis_irish
     image: redis:latest
+    ports:
+      - 6379:6379
     environment:
       TZ: ${DEFAULT_TIMEZONE}
 
