@@ -20,24 +20,24 @@ class FileSaver
      * @var string
      */
     private string $uploadTempDir;
-    private FileSystemHelper $system_helper;
+    private FileSystemHelper $systemHelper;
 
 
     /**
      * FileSaver constructor.
      *
      * @param  SluggerInterface  $slugger
-     * @param  FileSystemHelper  $system_helper
+     * @param  FileSystemHelper  $systemHelper
      * @param  string            $uploadTempDir
      */
     public function __construct(
         SluggerInterface $slugger,
-        FileSystemHelper $system_helper,
+        FileSystemHelper $systemHelper,
         string $uploadTempDir
     ) {
         $this->slugger = $slugger;
         $this->uploadTempDir = $uploadTempDir;
-        $this->system_helper = $system_helper;
+        $this->systemHelper = $systemHelper;
     }
 
     /**
@@ -60,7 +60,7 @@ class FileSaver
         );
 
         // check if folder exist before upload file
-        $this->system_helper->createFolder($this->uploadTempDir);
+        $this->systemHelper->createFolder($this->uploadTempDir);
 
         try {
             $uploadFile->move($this->uploadTempDir, $fileName);
