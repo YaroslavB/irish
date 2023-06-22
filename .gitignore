@@ -18,6 +18,9 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+public/uploads
+
 docker/mysql
 help.md
 .idea
