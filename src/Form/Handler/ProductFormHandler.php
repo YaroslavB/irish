@@ -4,26 +4,24 @@ namespace App\Form\Handler;
 
 use App\Entity\Product;
 use App\Utils\File\FileSaver;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Utils\Manager\ProductManager;
 use Symfony\Component\Form\Form;
 
 class ProductFormHandler
 {
-    /**
-     * @var ManagerRegistry
-     */
-    private ManagerRegistry $entityManager;
+
     private FileSaver $fileSaver;
+    private ProductManager $product_manager;
 
     /**
      * ProductFormHandler constructor.
      */
     public function __construct(
-        ManagerRegistry $entityManager,
+        ProductManager $product_manager,
         FileSaver $fileSaver
     ) {
-        $this->entityManager = $entityManager;
         $this->fileSaver = $fileSaver;
+        $this->product_manager = $product_manager;
     }
 
     /**
@@ -34,14 +32,12 @@ class ProductFormHandler
      */
     public function processEditForm(Product $product, Form $form): Product
     {
-        $entityManager = $this->entityManager->getManager();
+        $this->product_manager->save($product);
         $newFile = $form->get('newImage')->getData();
         $newTempFile = $newFile
             ? $this->fileSaver->saveUploadedFileTemp($newFile)
             : null;
-
-        $entityManager->persist($product);
-        $entityManager->flush();
+        $this->product_manager->updateProductImages($product, $newTempFile);
 
         return $product;
     }
