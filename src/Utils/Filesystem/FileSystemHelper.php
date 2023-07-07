@@ -27,7 +27,7 @@ class FileSystemHelper
     public function createFolder(string $folder): void
     {
         if ( ! $this->fileSystem->exists($folder)) {
-            $this->fileSystemr->mkdir($folder);
+            $this->fileSystem->mkdir($folder);
         }
     }
 
