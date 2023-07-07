@@ -34,6 +34,14 @@
                             <td>{{ product.price }}</td>
                             <td>{{ product.quantity }}</td>
                             <td>
+                                {% set images = product.getProductImages().getValues() %}
+                                {% if images|length %}
+                                    {% set image = images[0] %}
+                                    <img src="{{ asset('uploads/images/products/' ~ product.id ~ '/' ~ image.filenameMiddle) }}"
+                                         style="width: 150px"
+                                         alt="{{ image.filenameMiddle }}"
+                                    >
+                                {% endif %}
 
                             </td>
                             <td>
