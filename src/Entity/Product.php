@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -55,7 +56,7 @@ class Product
     private $isDeleted;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProductImage::class, mappedBy="product", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=ProductImage::class, mappedBy="product", cascade={"persist"} ,orphanRemoval=true)
      */
     private $productImages;
 
@@ -64,7 +65,7 @@ class Product
      */
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
         $this->isPublished = false;
         $this->isDeleted = false;
         $this->productImages = new ArrayCollection();
@@ -112,12 +113,12 @@ class Product
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -170,7 +171,7 @@ class Product
 
     public function addProductImage(ProductImage $productImage): self
     {
-        if (!$this->productImages->contains($productImage)) {
+        if ( ! $this->productImages->contains($productImage)) {
             $this->productImages[] = $productImage;
             $productImage->setProduct($this);
         }
@@ -186,7 +187,5 @@ class Product
                 $productImage->setProduct(null);
             }
         }
-
-        return $this;
     }
 }
