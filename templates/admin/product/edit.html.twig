@@ -5,23 +5,12 @@
 {% block body %}
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                    <a href="{{ path('admin_product_list') }}" class="font-weight-bold text-primary">Products</a>
-                    <div class="ml-2 mr-2">/</div>
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        {% if product.id %}
-                            Edit
-                        {% else %}
-                            Add new
-                        {% endif %}
-                    </h6>
-                </div>
-                <a href="{{ path('admin_product_add') }}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
-                    <i class="fas fa-plus fa-sm text-white-50"></i> Add new
-                </a>
-            </div>
+            {% include 'admin/_embed/_card/_breadcrumbs.html.twig' with{
+                'sectionTitle':'Products',
+                'actionUrl': path('admin_product_list'),
+                'addActionUrl': path('admin_product_add'),
+                'entity':product
+            } %}
         </div>
         <div class="card-body">
             {{ form_start(form) }}
@@ -99,7 +88,8 @@
                                  alt="{{ image.filenameMiddle }}">
                         </div>
                         <div class="col-md-7">
-                            <a href="#" class="btn btn-outline-info">
+                            <a href="{{ path('app_admin_product_image_delete',{'id':image.id}) }}"
+                               class="btn btn-outline-info">
                                 DELETE
                             </a>
                         </div>
@@ -131,21 +121,10 @@
             </div>
 
             <hr/>
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <a href="{{ path('admin_product_list') }}" class="btn btn-default btn-return">
-                        <i class="fas fa-arrow-circle-left"></i>
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        Save changes
-                    </button>
-                </div>
-                {% if product.id %}
-                    <a class="btn btn-white" data-toggle="modal" data-target="#approveDeleteModal">
-                        <i class="fas fa-times fa-sm"></i> Delete row
-                    </a>
-                {% endif %}
-            </div>
+            {% include 'admin/_embed/_card/_form_buttons.html.twig' with{
+                'entity':product,
+                'catalog_route': path('admin_product_list')
+            } %}
             {{ form_rest(form) }}
             {{ form_end(form) }}
         </div>

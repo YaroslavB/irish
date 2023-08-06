@@ -31,5 +31,15 @@ class FileSystemHelper
         }
     }
 
+    /**
+     * @param  string  $item
+     */
+    public function remove(string $item): void
+    {
+        if ($this->fileSystem->exists($item)) {
+            $this->fileSystem->remove($item);
+        }
+    }
+
 
 }

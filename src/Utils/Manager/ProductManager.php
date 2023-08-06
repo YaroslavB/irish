@@ -42,9 +42,10 @@ class ProductManager
         return $this->entityManager->getRepository(Product::class);
     }
 
-    public function remove()
+    public function remove(Product $product)
     {
-        //
+        $product->setIsDeleted(true);
+        $this->save($product);
     }
 
     /**
