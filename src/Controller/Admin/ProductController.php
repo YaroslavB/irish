@@ -47,6 +47,9 @@ class ProductController extends AbstractController
         ProductFormHandler $form_handler,
         Product $product = null
     ): Response {
+        if ( ! $product) {
+            $product = new Product();
+        }
         $form = $this->createForm(EditFormProductType::class, $product);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -58,11 +61,14 @@ class ProductController extends AbstractController
             );
         }
 
+        $images = $product->getProductImages()
+            ? $product->getProductImages()->getValues()
+            : [];
 
         return $this->render(
             'admin/product/edit.html.twig',
             [
-                'images'  => $product->getProductImages()->getValues(),
+                'images'  => $images,
                 'form'    => $form->createView(),
                 'product' => $product,
             ]
