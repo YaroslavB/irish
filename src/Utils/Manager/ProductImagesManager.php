@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ProductImagesManager
 {
+    const IMAGE_PATTERN = '%s_%s.jpg';
     /**
      * @var EntityManagerInterface
      */
@@ -61,7 +62,7 @@ class ProductImagesManager
             'width'       => 60,
             'height'      => null,
             'newFolder'   => $productDir,
-            'newFilename' => sprintf('%s_%s.jpg', $fileNameId, 'small'),
+            'newFilename' => sprintf(self::IMAGE_PATTERN, $fileNameId, 'small'),
         ];
 
         $imageSmall = $this->imageResizer->resizeImageAndSave(
@@ -74,7 +75,7 @@ class ProductImagesManager
             'width'       => 430,
             'height'      => null,
             'newFolder'   => $productDir,
-            'newFilename' => sprintf('%s_%s.jpg', $fileNameId, 'middle'),
+            'newFilename' => sprintf(self::IMAGE_PATTERN, $fileNameId, 'middle'),
         ];
         $imageMiddle = $this->imageResizer->resizeImageAndSave(
             $this->uploadTempDir,
@@ -86,7 +87,7 @@ class ProductImagesManager
             'width'       => 800,
             'height'      => null,
             'newFolder'   => $productDir,
-            'newFilename' => sprintf('%s_%s.jpg', $fileNameId, 'big'),
+            'newFilename' => sprintf(self::IMAGE_PATTERN, $fileNameId, 'big'),
         ];
         $imageBig = $this->imageResizer->resizeImageAndSave(
             $this->uploadTempDir,
