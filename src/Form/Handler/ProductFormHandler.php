@@ -45,6 +45,4 @@ class ProductFormHandler
 
         return $product;
     }
-
-
 }
