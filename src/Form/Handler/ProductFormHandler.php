@@ -37,8 +37,12 @@ class ProductFormHandler
         $newTempFile = $newFile
             ? $this->fileSaver->saveUploadedFileTemp($newFile)
             : null;
-        $this->product_manager->updateProductImages($product, $newTempFile);
+        if ($newTempFile !== null) {
+            $this->product_manager->updateProductImages($product, $newTempFile);
+        }
+
         $this->product_manager->save($product);
+
         return $product;
     }
 

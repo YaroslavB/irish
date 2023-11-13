@@ -47,11 +47,12 @@ class ProductController extends AbstractController
         ProductFormHandler $formHandler,
         Product $product = null
     ): Response {
-        if ( ! $product) {
+        if (!$product) {
             $product = new Product();
         }
         $form = $this->createForm(EditFormProductType::class, $product);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $formHandler->processEditForm($product, $form);
 

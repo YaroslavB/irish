@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ProductImagesManager
 {
-    const IMAGE_PATTERN = '%s_%s.jpg';
+    protected const IMAGE_PATTERN = '%s_%s.jpg';
     /**
      * @var EntityManagerInterface
      */
