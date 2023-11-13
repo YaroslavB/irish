@@ -18,47 +18,52 @@ class Product
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $title;
+    private ?string $title;
 
     /**
      * @ORM\Column(type="decimal", precision=6, scale=2)
      */
-    private $price;
+    private ?string $price;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $quantity;
+    private ?int $quantity;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $createdAt;
+    private DateTimeImmutable $createdAt;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $description;
+    private ?string $description;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isPublished;
+    private bool $isPublished;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isDeleted;
+    private bool $isDeleted;
 
     /**
      * @ORM\OneToMany(targetEntity=ProductImage::class, mappedBy="product", cascade={"persist"} ,orphanRemoval=true)
      */
-    private $productImages;
+    private ArrayCollection $productImages;
+
+    /**
+     * @ORM\Column(type="string", length=128, nullable=true)
+     */
+    private ?string $slug;
 
     /**
      * Product constructor.
@@ -171,7 +176,7 @@ class Product
 
     public function addProductImage(ProductImage $productImage): self
     {
-        if ( ! $this->productImages->contains($productImage)) {
+        if (!$this->productImages->contains($productImage)) {
             $this->productImages[] = $productImage;
             $productImage->setProduct($this);
         }
@@ -186,6 +191,18 @@ class Product
                 $productImage->setProduct($this);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

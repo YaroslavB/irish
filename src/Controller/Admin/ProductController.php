@@ -44,7 +44,7 @@ class ProductController extends AbstractController
     public function edit(
         Request $request,
         ManagerRegistry $doctrine,
-        ProductFormHandler $form_handler,
+        ProductFormHandler $formHandler,
         Product $product = null
     ): Response {
         if ( ! $product) {
@@ -53,7 +53,7 @@ class ProductController extends AbstractController
         $form = $this->createForm(EditFormProductType::class, $product);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $form_handler->processEditForm($product, $form);
+            $formHandler->processEditForm($product, $form);
 
             return $this->redirectToRoute(
                 'admin_product_edit',
