@@ -31,6 +31,7 @@ class EmailVerifier
         UserInterface $user,
         TemplatedEmail $email
     ): void {
+        //@todo: send email not correct work
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
             $user->getId(),
@@ -42,10 +43,8 @@ class EmailVerifier
         $context['signedUrl'] = $signatureComponents->getSignedUrl();
         $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
         $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
-
+        //$transport = Transport::fromDsn('smtp://mailhog:1025');
         $email->context($context);
-
-        dd($context['signedUrl']);
         $this->mailer->send($email);
     }
 
