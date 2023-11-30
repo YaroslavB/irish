@@ -31,7 +31,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return Passport
      */
@@ -39,11 +39,12 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     {
         $email = $request->request->get('email', '');
         $password = $request->request->get('password', '');
-        $token =$request->request->get('_csrf_token');
+        $token = $request->request->get('_csrf_token');
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
-        return new Passport(new UserBadge($email), new PasswordCredentials($password),
+        return new Passport(
+            new UserBadge($email), new PasswordCredentials($password),
             [
                 new CsrfTokenBadge('authenticate', $token),
                 new RememberMeBadge(),
@@ -54,19 +55,26 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     /**
      * @throws Exception
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
-    {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+    public function onAuthenticationSuccess(
+        Request $request,
+        TokenInterface $token,
+        string $firewallName
+    ): ?Response {
+        if ($targetPath = $this->getTargetPath(
+            $request->getSession(),
+            $firewallName
+        )
+        ) {
             return new RedirectResponse($targetPath);
         }
 
-         return new RedirectResponse($this->urlGenerator->generate('homepage'));
+        return new RedirectResponse($this->urlGenerator->generate('homepage'));
         // app_profile
         //throw new Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return string
      */
