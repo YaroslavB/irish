@@ -7,6 +7,9 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\UuidV1;
+
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -19,6 +22,13 @@ class Product
      * @ORM\Column(type="integer")
      */
     private int $id;
+
+
+    /**
+     * @ORM\Column(type="uuid", nullable=true)
+     */
+
+    private ?UuidV1 $uuid;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -71,6 +81,7 @@ class Product
      */
     public function __construct()
     {
+        $this->uuid = Uuid::v1();
         $this->createdAt = new DateTimeImmutable();
         $this->isPublished = false;
         $this->isDeleted = false;
@@ -206,5 +217,11 @@ class Product
         $this->slug = $slug;
 
         return $this;
+    }
+
+
+    public function getUuid()
+    {
+        return $this->uuid;
     }
 }

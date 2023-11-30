@@ -23,6 +23,7 @@ class ProductManager extends AbstractManager
      * ProductManager constructor.
      */
     public function __construct(
+
         EntityManagerInterface $entityManager,
         ProductImagesManager $images_manager,
         string $productImagesDir
@@ -33,9 +34,13 @@ class ProductManager extends AbstractManager
         $this->images_manager = $images_manager;
     }
 
+    public function getRepository(): ObjectRepository
+    {
+        return $this->entityManager->getRepository(Product::class);
+    }
 
     /**
-     * @param  Product  $product
+     * @param Product $product
      *
      * @return string
      */
@@ -45,7 +50,12 @@ class ProductManager extends AbstractManager
     }
 
 
-    public function remove(object $product)
+    /**
+     * @param object $product
+     *
+     * @return void
+     */
+    public function remove(object $product): void
     {
         $product->setIsDeleted(true);
         $this->save($product);
@@ -53,8 +63,8 @@ class ProductManager extends AbstractManager
 
 
     /**
-     * @param  Product  $product
-     * @param  string   $tempImageFileName
+     * @param Product $product
+     * @param string  $tempImageFileName
      *
      * @return Product
      */
@@ -62,7 +72,7 @@ class ProductManager extends AbstractManager
         Product $product,
         string $tempImageFileName
     ): Product {
-        if ( ! $tempImageFileName) {
+        if (!$tempImageFileName) {
             return $product;
         }
         // product save directory
@@ -78,8 +88,4 @@ class ProductManager extends AbstractManager
         return $product;
     }
 
-    public function getRepository(): ObjectRepository
-    {
-        return $this->entityManager->getRepository(Product::class);
-    }
 }

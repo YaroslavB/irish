@@ -43,8 +43,8 @@ class ProductImagesManager extends AbstractManager
     }
 
     /**
-     * @param  string  $productDir
-     * @param  string  $tempImageFileName
+     * @param string $productDir
+     * @param string $tempImageFileName
      *
      * @return ProductImage
      */
@@ -72,7 +72,11 @@ class ProductImagesManager extends AbstractManager
             'width'       => 430,
             'height'      => null,
             'newFolder'   => $productDir,
-            'newFilename' => sprintf(self::IMAGE_PATTERN, $fileNameId, 'middle'),
+            'newFilename' => sprintf(
+                self::IMAGE_PATTERN,
+                $fileNameId,
+                'middle'
+            ),
         ];
         $imageMiddle = $this->imageResizer->resizeImageAndSave(
             $this->uploadTempDir,
@@ -101,8 +105,8 @@ class ProductImagesManager extends AbstractManager
     }
 
     /**
-     * @param  ProductImage  $productImage
-     * @param  string        $productDir
+     * @param ProductImage $productImage
+     * @param string       $productDir
      */
     public function removeImageFromProduct(
         ProductImage $productImage,
@@ -114,7 +118,7 @@ class ProductImagesManager extends AbstractManager
         $middleFilePath = $productDir.'/'.$productImage->getFileNameMiddle();
         $this->fileSystem->remove($middleFilePath);
 
-        $bigFilePath = $productDir . '/' . $productImage->getFileNameBig();
+        $bigFilePath = $productDir.'/'.$productImage->getFileNameBig();
         $this->fileSystem->remove($bigFilePath);
 
         $product = $productImage->getProduct();
