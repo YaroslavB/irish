@@ -3,6 +3,7 @@
 namespace App\Form\Handler;
 
 use App\Entity\Product;
+use App\Form\DTO\EditFormDto;
 use App\Utils\File\FileSaver;
 use App\Utils\Manager\ProductManager;
 use Symfony\Component\Form\Form;
@@ -11,28 +12,41 @@ class ProductFormHandler
 {
 
     private FileSaver $fileSaver;
-    private ProductManager $product_manager;
+    private ProductManager $productManager;
 
     /**
      * ProductFormHandler constructor.
      */
     public function __construct(
-        ProductManager $product_manager,
+        ProductManager $productManager,
         FileSaver $fileSaver
     ) {
         $this->fileSaver = $fileSaver;
-        $this->product_manager = $product_manager;
+        $this->productManager = $productManager;
     }
 
     /**
-     * @param  Product  $product
-     * @param  Form     $form
+     * @param EditFormDto $editFormDto
+     * @param Form        $form
      *
      * @return Product
      */
-    public function processEditForm(Product $product, Form $form): Product
-    {
-        $this->product_manager->save($product);
+    public function processEditForm(
+        EditFormDto $editFormDto,
+        Form $form
+    ): Product {
+        $product = new Product();
+        if ($editFormDto->id) {
+            $product = $this->productManager->find($editFormDto->id);
+        }
+        $product->setTitle($editFormDto->title);
+        $product->setPrice($editFormDto->price);
+        $product->setQuantity($editFormDto->quantity);
+        $product->setDescription($editFormDto->description);
+        $product->setIsPublished($editFormDto->isPublished);
+        $product->setIsDeleted($editFormDto->isDeleted);
+
+        $this->productManager->save($product);
         $newFile = $form->get('newImage')->getData();
 
         $newTempFile = $newFile
@@ -40,10 +54,10 @@ class ProductFormHandler
             : null;
 
         if ($newTempFile !== null) {
-            $this->product_manager->updateProductImages($product, $newTempFile);
+            $this->productManager->updateProductImages($product, $newTempFile);
         }
 
-        $this->product_manager->save($product);
+        $this->productManager->save($product);
 
         return $product;
     }

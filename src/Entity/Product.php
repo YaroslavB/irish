@@ -34,17 +34,17 @@ class Product
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private ?string $title;
+    private $title;
 
     /**
      * @ORM\Column(type="decimal", precision=6, scale=2)
      */
-    private ?string $price;
+    private $price;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private ?int $quantity;
+    private $quantity;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -54,7 +54,7 @@ class Product
     /**
      * @ORM\Column(type="text")
      */
-    private ?string $description;
+    private $description;
 
     /**
      * @ORM\Column(type="boolean")
