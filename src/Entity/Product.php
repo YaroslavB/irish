@@ -21,11 +21,12 @@ class Product
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private int $id;
+    private $id;
 
 
     /**
      * @ORM\Column(type="uuid", nullable=true)
+     * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
 
     private ?UuidV1 $uuid;
@@ -74,7 +75,7 @@ class Product
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=128, nullable=true)
      */
-    private ?string $slug;
+    private $slug;
 
     /**
      * Product constructor.
@@ -198,10 +199,10 @@ class Product
 
     public function removeProductImage(ProductImage $productImage): self
     {
-        if ($this->productImages->removeElement($productImage)) {
-            if ($productImage->getProduct() === $this) {
-                $productImage->setProduct($this);
-            }
+        if ($this->productImages->removeElement($productImage)
+            && $productImage->getProduct() === $this
+        ) {
+            $productImage->setProduct($this);
         }
 
         return $this;
