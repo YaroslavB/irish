@@ -137,7 +137,7 @@
         </div>
     </div>
 
-    {% if product %}
+    {% if product.id %}
         {% include 'admin/_embed/_utils/_modal.html.twig' with{
             'modalId': 'approveDeleteModal',
             'modalTitle': 'Delete product?',
