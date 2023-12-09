@@ -78,6 +78,11 @@ class Product
     private $slug;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
+     */
+    private $category;
+
+    /**
      * Product constructor.
      */
     public function __construct()
@@ -224,5 +229,17 @@ class Product
     public function getUuid()
     {
         return $this->uuid;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
     }
 }
