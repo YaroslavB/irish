@@ -8,14 +8,11 @@ use App\Entity\ProductImage;
 use App\Utils\File\ImageResizer;
 use App\Utils\Filesystem\FileSystemHelper;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 
-class ProductImagesManager
+class ProductImagesManager extends AbstractManager
 {
     protected const IMAGE_PATTERN = '%s_%s.jpg';
-    /**
-     * @var EntityManagerInterface
-     */
-    private EntityManagerInterface $entityManager;
 
     /**
      * @var FileSystemHelper
@@ -39,15 +36,15 @@ class ProductImagesManager
         ImageResizer $imageResizer,
         string $uploadTempDir
     ) {
-        $this->entityManager = $entityManager;
+        parent::__construct($entityManager);
         $this->fileSystem = $fileSystem;
         $this->uploadTempDir = $uploadTempDir;
         $this->imageResizer = $imageResizer;
     }
 
     /**
-     * @param  string  $productDir
-     * @param  string  $tempImageFileName
+     * @param string $productDir
+     * @param string $tempImageFileName
      *
      * @return ProductImage
      */
@@ -75,7 +72,11 @@ class ProductImagesManager
             'width'       => 430,
             'height'      => null,
             'newFolder'   => $productDir,
-            'newFilename' => sprintf(self::IMAGE_PATTERN, $fileNameId, 'middle'),
+            'newFilename' => sprintf(
+                self::IMAGE_PATTERN,
+                $fileNameId,
+                'middle'
+            ),
         ];
         $imageMiddle = $this->imageResizer->resizeImageAndSave(
             $this->uploadTempDir,
@@ -104,8 +105,8 @@ class ProductImagesManager
     }
 
     /**
-     * @param  ProductImage  $productImage
-     * @param  string        $productDir
+     * @param ProductImage $productImage
+     * @param string       $productDir
      */
     public function removeImageFromProduct(
         ProductImage $productImage,
@@ -125,4 +126,11 @@ class ProductImagesManager
         $this->entityManager->flush();
     }
 
+    /**
+     * @return ObjectRepository
+     */
+    public function getRepository(): ObjectRepository
+    {
+        return $this->entityManager->getRepository(ProductImage::class);
+    }
 }

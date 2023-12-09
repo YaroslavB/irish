@@ -7,6 +7,9 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\UuidV1;
+
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -18,22 +21,30 @@ class Product
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private int $id;
+    private $id;
+
+
+    /**
+     * @ORM\Column(type="uuid", nullable=true)
+     * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
+     */
+
+    private ?UuidV1 $uuid;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private ?string $title;
+    private $title;
 
     /**
      * @ORM\Column(type="decimal", precision=6, scale=2)
      */
-    private ?string $price;
+    private $price;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private ?int $quantity;
+    private $quantity;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -43,7 +54,7 @@ class Product
     /**
      * @ORM\Column(type="text")
      */
-    private ?string $description;
+    private $description;
 
     /**
      * @ORM\Column(type="boolean")
@@ -64,13 +75,14 @@ class Product
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=128, nullable=true)
      */
-    private ?string $slug;
+    private $slug;
 
     /**
      * Product constructor.
      */
     public function __construct()
     {
+        $this->uuid = Uuid::v1();
         $this->createdAt = new DateTimeImmutable();
         $this->isPublished = false;
         $this->isDeleted = false;
@@ -187,10 +199,10 @@ class Product
 
     public function removeProductImage(ProductImage $productImage): self
     {
-        if ($this->productImages->removeElement($productImage)) {
-            if ($productImage->getProduct() === $this) {
-                $productImage->setProduct($this);
-            }
+        if ($this->productImages->removeElement($productImage)
+            && $productImage->getProduct() === $this
+        ) {
+            $productImage->setProduct($this);
         }
 
         return $this;
@@ -206,5 +218,11 @@ class Product
         $this->slug = $slug;
 
         return $this;
+    }
+
+
+    public function getUuid()
+    {
+        return $this->uuid;
     }
 }

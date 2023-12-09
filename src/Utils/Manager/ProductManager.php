@@ -8,7 +8,7 @@ use App\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 
-class ProductManager
+class ProductManager extends AbstractManager
 {
 
 
@@ -16,8 +16,6 @@ class ProductManager
      * @var string
      */
     private string $productImagesDir;
-
-    private EntityManagerInterface $entityManager;
     private ProductImagesManager $images_manager;
 
 
@@ -25,31 +23,24 @@ class ProductManager
      * ProductManager constructor.
      */
     public function __construct(
+
         EntityManagerInterface $entityManager,
         ProductImagesManager $images_manager,
         string $productImagesDir
     ) {
+        parent::__construct($entityManager);
         $this->productImagesDir = $productImagesDir;
         $this->entityManager = $entityManager;
         $this->images_manager = $images_manager;
     }
 
-    /**
-     * @return ObjectRepository
-     */
     public function getRepository(): ObjectRepository
     {
         return $this->entityManager->getRepository(Product::class);
     }
 
-    public function remove(Product $product)
-    {
-        $product->setIsDeleted(true);
-        $this->save($product);
-    }
-
     /**
-     * @param  Product  $product
+     * @param Product $product
      *
      * @return string
      */
@@ -60,18 +51,20 @@ class ProductManager
 
 
     /**
-     * @param  Product  $product
+     * @param object $product
+     *
+     * @return void
      */
-    public function save(Product $product): void
+    public function remove(object $product): void
     {
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
+        $product->setIsDeleted(true);
+        $this->save($product);
     }
 
 
     /**
-     * @param  Product  $product
-     * @param  string   $tempImageFileName
+     * @param Product $product
+     * @param string  $tempImageFileName
      *
      * @return Product
      */
@@ -79,7 +72,7 @@ class ProductManager
         Product $product,
         string $tempImageFileName
     ): Product {
-        if ( ! $tempImageFileName) {
+        if (!$tempImageFileName) {
             return $product;
         }
         // product save directory
@@ -94,4 +87,5 @@ class ProductManager
 
         return $product;
     }
+
 }
