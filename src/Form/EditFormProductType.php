@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Product;
+use App\Form\DTO\EditFormDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -74,7 +74,6 @@ class EditFormProductType extends AbstractType
                 FileType::class,
                 [
                     'label'    => 'Choose image',
-                    'mapped'   => false,
                     'required' => false,
                     'attr'     => ['class' => 'form-control-file'],
                 ]
@@ -109,7 +108,7 @@ class EditFormProductType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'data_class' => Product::class,
+                'data_class' => EditFormDto::class,
             ]
         );
     }
