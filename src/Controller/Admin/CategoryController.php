@@ -26,11 +26,11 @@ class CategoryController extends AbstractController
             ['id' => 'DESC'],
             30
         );
-        dd($categories);
 
-        return $this->render('admin/category/list', [
-            'categories' => $categories,
-        ]);
+        return $this->render(
+            'admin/category/list.html.twig',
+            ['categories' => $categories]
+        );
     }
 
     public function edit(Request $request, Category $category = null): Response

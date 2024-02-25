@@ -1,33 +1,37 @@
-<!DOCTYPE html>
+{% extends 'admin/layout/layout_main.html.twig' %}
 
-<title>Hello CategoryController!</title>
+{% block title_detailed %}All Categories{% endblock %}
 
 {% block body %}
-    <style>
-        .example-wrapper {
-            margin: 1em auto;
-            max-width: 800px;
-            width: 95%;
-            font: 18px/1.5 sans-serif;
-        }
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
 
-        .example-wrapper code {
-            background: #F5F5F5;
-            padding: 2px 6px;
-        }
-    </style>
-
-    <div class="example-wrapper">
-
-
-        This friendly message is coming from:
-        <ul>
-            <li>Your controller at <code><a
-                            href="{{ '/var/www/irish/src/Controller/Admin/CategoryController.php'|file_link(0) }}">src/Controller/Admin/CategoryController.php</a></code>
-            </li>
-            <li>Your template at <code><a
-                            href="{{ '/var/www/irish/templates/admin/category/list.html.twig'|file_link(0) }}">templates/admin/category/index.html.twig</a></code>
-            </li>
-        </ul>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="main_table">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Slug</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td>
+                                <i class="fas fa-check fa-sm" style=""></i>
+                            </td>
+                            <td>
+                                <a href="" class="btn btn-outline-info">Edit</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}
