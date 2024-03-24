@@ -47,13 +47,15 @@ class RegistrationController extends AbstractController
             ->text('Sending emails is fun again!')
             ->html('<p>See Twig integration for better HTML integration!</p>');
         try {
-            $transport = Transport::fromDsn('smtp://mailhog:1025');
+            $transport = Transport::fromDsn(getenv('MAILER_DSN'));
             $mailer = new Mailer($transport);
-            $mailer->send($email);
+            $info = $mailer->send($email);
         } catch (TransportExceptionInterface $e) {
-            echo $e->getMessage() . PHP_EOL;
-            echo $e->getCode() . PHP_EOL;
+            echo $e->getMessage().PHP_EOL;
+            echo $e->getCode().PHP_EOL;
         }
+
+        return new Response('ok');
     }
 
     /**

@@ -55,6 +55,9 @@ services:
   mailhog:
     container_name: mailhog_irish
     image: mailhog/mailhog
+    restart: always
+    logging:
+      driver: "none"
     ports:
       - "8025:8025" # UI
       - "1025:1025"
