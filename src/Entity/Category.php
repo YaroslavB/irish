@@ -21,12 +21,13 @@ class Category
     private $id;
 
     /**
-     * @Gedmo\Slug(fields={"title"})
+     *
      * @ORM\Column(type="string", length=100)
      */
     private $title;
 
     /**
+     * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=120, unique=true)
      */
     private $slug;
@@ -53,7 +54,7 @@ class Category
 
     public function setTitle(string $title): self
     {
-        $this->title = $title;
+        $this->title = ucfirst(strtolower($title));
 
         return $this;
     }
