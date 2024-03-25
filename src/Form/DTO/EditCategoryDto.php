@@ -10,9 +10,9 @@ class EditCategoryDto
 
 
     /**
-     * @var int|null
+     * @var string
      */
-    public ?int $id;
+    public $id;
 
     /**
      * @Assert\NotBlank(message="Title is required")
