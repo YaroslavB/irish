@@ -30,7 +30,7 @@
                 <div class="col-md-1">
                     {{ form_label(form.price) }}
                 </div>
-                <div class="col-md-11">
+                <div class="col-md-2">
                     {{ form_widget(form.price) }}
                     <div class="form-error">
                         {{ form_errors(form.price) }}
@@ -42,7 +42,7 @@
                 <div class="col-md-1">
                     {{ form_label(form.quantity) }}
                 </div>
-                <div class="col-md-11">
+                <div class="col-md-2">
                     {{ form_widget(form.quantity) }}
                     <div class="form-error">
                         {{ form_errors(form.quantity) }}
@@ -61,6 +61,19 @@
                     </div>
                 </div>
             </div>
+            <div class="form-group row">
+                <div class="col-md-1">
+                    {{ form_label(form.category) }}
+                </div>
+                <div class="col-md-4">
+                    {{ form_widget(form.category) }}
+                    <div class="form-error">
+                        {{ form_errors(form.category) }}
+                    </div>
+                </div>
+            </div>
+
+
             <div class="form-group row">
                 <div class="col-md-1">
                     slug
@@ -92,8 +105,9 @@
 
                 {% for image in images %}
                     <div class="row mt-2">
-                        <div class="col-md-5">
-                            <img src="{{ asset('uploads/images/products/' ~ product.id ~ '/' ~ image.filenameMiddle) }}"
+                        <div class="col-md-4">
+                            <img class="img-thumbnail"
+                                 src="{{ asset('uploads/images/products/' ~ product.id ~ '/' ~ image.filenameMiddle) }}"
                                  alt="{{ image.filenameMiddle }}">
                         </div>
                         <div class="col-md-7">
