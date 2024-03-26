@@ -2,6 +2,7 @@
 
 namespace App\Form\DTO;
 
+use App\Entity\Category;
 use App\Entity\Product;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -37,6 +38,13 @@ class EditFormDto
      * @var string|null
      */
     public ?string $description;
+
+
+    /**
+     * @Assert\NotBlank(message="Category is required")
+     * @var Category
+     */
+    public $category;
 
     /**
      * @Assert\File(maxSize="5024k",mimeTypes={image/jpeg, image/png}, mimeTypesMessage="Please upload a valid image")
