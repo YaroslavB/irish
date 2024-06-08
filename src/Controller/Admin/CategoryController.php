@@ -7,6 +7,7 @@ use App\Form\DTO\EditCategoryDto;
 use App\Form\EditFormCategoryType;
 use App\Form\Handler\CategoryFormHandler;
 use App\Repository\CategoryRepository;
+use App\Utils\Manager\CategoryManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +25,8 @@ class CategoryController extends AbstractController
      */
     public function list(CategoryRepository $categoryRepository): Response
     {
-        $categories = $categoryRepository->findBy([], ['id' => 'DESC']);
+        $categories = $categoryRepository->findBy(['isDeleted' => false],
+            ['id' => 'DESC']);
 
         return $this->render(
             'admin/category/list.html.twig',
@@ -71,11 +73,14 @@ class CategoryController extends AbstractController
      * Delete  product
      * @Route("/delete/{id}", name="delete")
      */
-    public function delete(Category $category): Response
+    public function delete(
+        Category $category,
+        CategoryManager $categoryManager
+    ): Response
     {
-        return $this->render('admin/category/delete', [
-            'controller_name' => 'CategoryController',
-        ]);
+        $categoryManager->remove($category);
+
+        return $this->redirectToRoute('admin_category_list');
     }
 
 

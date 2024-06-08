@@ -59,7 +59,6 @@ class ProductFormHandler
         }
 
         $this->productManager->save($product);
-
         return $product;
     }
 }

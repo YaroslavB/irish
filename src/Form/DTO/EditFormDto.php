@@ -47,11 +47,14 @@ class EditFormDto
     public $category;
 
     /**
-     * @Assert\File(maxSize="5024k",mimeTypes={image/jpeg, image/png}, mimeTypesMessage="Please upload a valid image")
-     *
-     * @var uploadedFile
+     * @Assert\File(
+     *     maxSize = "5024k",
+     *     mimeTypes = {"image/jpeg", "image/png"},
+     *     mimeTypesMessage = "Please upload a valid image"
+     * )
+     * @var UploadedFile|null
      */
-    public UploadedFile $newImage;
+    public $newImage;
     /**
      * @var bool
      */

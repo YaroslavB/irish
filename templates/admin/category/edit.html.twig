@@ -8,7 +8,7 @@
             {% include 'admin/_embed/_card/_breadcrumbs.html.twig' with{
                 'sectionTitle':'Categories',
                 'actionUrl': path('admin_category_list'),
-                'addActionUrl': path('admin_product_add'),
+                'addActionUrl': path('admin_category_add'),
                 'entity':category
             } %}
         </div>
@@ -48,9 +48,9 @@
     {% if category and category.id %}
         {% include 'admin/_embed/_utils/_modal.html.twig' with{
             'modalId': 'approveDeleteModal',
-            'modalTitle': 'Delete product?',
-            'modaslText':   'Delete product',
+            'modalTitle': 'Delete category?',
+            'modaslText':   'Delete category',
             'actionUrl': path('admin_category_delete', {'id': category.id}),
-            'modalBtnText':'Delete product'} %}
+            'modalBtnText':'Delete category'} %}
     {% endif %}
 {% endblock %}

@@ -8,7 +8,6 @@ use App\Form\EditFormProductType;
 use App\Form\Handler\ProductFormHandler;
 use App\Repository\ProductRepository;
 use App\Utils\Manager\ProductManager;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,17 +43,18 @@ class ProductController extends AbstractController
      */
     public function edit(
         Request $request,
-        ManagerRegistry $doctrine,
         ProductFormHandler $formHandler,
         Product $product = null
     ): Response
     {
         $editProductDto = EditFormDto::fromProduct($product);
         $form = $this->createForm(EditFormProductType::class, $editProductDto);
+
+        // dd($editProductDto, $form,$request,$form->getData());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $formHandler->processEditForm($editProductDto, $form);
+            $product = $formHandler->processEditForm($editProductDto, $form);
             $this->addFlash('success', 'Product saved');
 
             return $this->redirectToRoute(
