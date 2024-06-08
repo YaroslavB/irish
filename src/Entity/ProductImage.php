@@ -21,22 +21,22 @@ class ProductImage
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="productImages")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $product;
+    private ?Product $product;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $fileNameBig;
+    private ?string $fileNameBig;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $fileNameMiddle;
+    private ?string $fileNameMiddle;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $fileNameSmall;
+    private ?string $fileNameSmall;
 
     public function getId(): ?int
     {
