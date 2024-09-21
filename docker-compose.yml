@@ -30,7 +30,7 @@ services:
     volumes:
       - ./docker/mysql:/var/lib/mysql
     command: --mysql-native-password=ON --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    #restart: always
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_PASSWORD: secret

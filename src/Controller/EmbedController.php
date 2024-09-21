@@ -8,9 +8,20 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EmbedController extends AbstractController
 {
-    public function showLastProducts(ProductRepository $productRepository
+    public function showLastProducts(
+        ProductRepository $productRepository,
+        int $productCount = 4,
+        int $categoryId = null
     ): Response {
-        $products = $productRepository->findBy([], ['id' => 'DESC']);
+        $params = [];
+        if ($categoryId) {
+            $params['category'] = $categoryId;
+        }
+        $products = $productRepository->findBy(
+            $params,
+            ['id' => 'DESC'],
+            $productCount
+        );
 
         return $this->render('main/_embed/_last_products.html.twig', [
             'product' => $products,
