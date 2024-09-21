@@ -56,11 +56,14 @@ class CategoryController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $category = $categoryFormHandler->processEditForm($editCategoryDto);
-
+            $this->addFlash('success', 'Category  saved');
             return $this->redirectToRoute(
                 'admin_category_edit',
                 ['id' => $category->getId()]
             );
+        }
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('error', 'Category not saved');
         }
 
         return $this->render('admin/category/edit.html.twig', [
@@ -79,7 +82,7 @@ class CategoryController extends AbstractController
     ): Response
     {
         $categoryManager->remove($category);
-
+        $this->addFlash('warning', 'Product delete');
         return $this->redirectToRoute('admin_category_list');
     }
 

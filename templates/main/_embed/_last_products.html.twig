@@ -21,7 +21,7 @@
                                     <div class="product-item text-center">
                                         <figure class="product-media">
                                             <span class="product-sale-status sale-status-new">New</span>
-                                            <a href="#">
+                                            <a href="{{ path('main_product_show',{'uuid':product.uuid}) }}">
 
                                                 <img src="{{ asset('uploads/images/products/' ~ product.id ~ '/' ~ cover.getFilenameMiddle()) }}"
                                                      alt="{{ product.title }}"
@@ -38,7 +38,7 @@
 
                                         <div class="product-card-content">
                                             <h3 class="product-title">
-                                                <a href="product.html">{{ product.title }}</a>
+                                                <a href="{{ path('main_product_show',{'uuid':product.uuid}) }}">{{ product.title }}</a>
                                             </h3>
                                             <div class="product-price justify-content-center">
                                                 ${{ product.price }}

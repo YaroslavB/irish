@@ -11,11 +11,11 @@ class CategoryManager extends AbstractManager
 
     public function getRepository(): ObjectRepository
     {
-        $this->entityManager->getRepository(Category::class);
+        return $this->entityManager->getRepository(Category::class);
     }
 
     /**
-     * @param Category $category
+     * @param object $category
      *
      * @return void
      */
