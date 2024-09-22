@@ -5,6 +5,8 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
+/public/build/
+/public/uploads/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
@@ -22,5 +24,6 @@
 public/uploads
 
 docker/mysql
+/bin/*
 help.md
 .idea
