@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security\Admin;
+namespace App\Security\Authenticator\Admin;
 
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
