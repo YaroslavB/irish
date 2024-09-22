@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Main;
 
 use App\Entity\User;
-use App\Form\RegistrationFormType;
+use App\Form\Main\RegistrationFormType;
 use App\Repository\UserRepository;
-use App\Security\EmailVerifier;
+use App\Security\Verifier\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -47,13 +47,15 @@ class RegistrationController extends AbstractController
             ->text('Sending emails is fun again!')
             ->html('<p>See Twig integration for better HTML integration!</p>');
         try {
-            $transport = Transport::fromDsn('smtp://mailhog:1025');
+            $transport = Transport::fromDsn(getenv('MAILER_DSN'));
             $mailer = new Mailer($transport);
-            $mailer->send($email);
+            $info = $mailer->send($email);
         } catch (TransportExceptionInterface $e) {
-            echo $e->getMessage() . PHP_EOL;
-            echo $e->getCode() . PHP_EOL;
+            echo $e->getMessage().PHP_EOL;
+            echo $e->getCode().PHP_EOL;
         }
+
+        return new Response('ok');
     }
 
     /**
@@ -93,7 +95,7 @@ class RegistrationController extends AbstractController
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate(
-                        'main/security/registration/confirmation_email.html.twig'
+                        'main/email/security/confirmation_email.html.twig'
                     )
             );
             $this->addFlash(
@@ -112,8 +114,11 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/verify/email", name="app_verify_email")
      */
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
-    {
+    public function verifyUserEmail(
+        Request $request,
+        TranslatorInterface $translator,
+        UserRepository $userRepository
+    ): Response {
         $id = $request->get('id');
 
         if (null === $id) {
@@ -131,13 +136,11 @@ class RegistrationController extends AbstractController
             $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('warning', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
-
             return $this->redirectToRoute('homepage');
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
-
         return $this->redirectToRoute('app_register');
     }
 }

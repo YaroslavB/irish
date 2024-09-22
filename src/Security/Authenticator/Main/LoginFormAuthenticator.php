@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security;
+namespace App\Security\Authenticator\Main;
 
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
