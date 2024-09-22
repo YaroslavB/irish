@@ -3,8 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Product;
+use App\Form\Admin\EditFormProductType;
 use App\Form\DTO\EditFormDto;
-use App\Form\EditFormProductType;
 use App\Form\Handler\ProductFormHandler;
 use App\Repository\ProductRepository;
 use App\Utils\Manager\ProductManager;

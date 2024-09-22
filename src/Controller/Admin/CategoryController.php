@@ -3,8 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Category;
+use App\Form\Admin\EditFormCategoryType;
 use App\Form\DTO\EditCategoryDto;
-use App\Form\EditFormCategoryType;
 use App\Form\Handler\CategoryFormHandler;
 use App\Repository\CategoryRepository;
 use App\Utils\Manager\CategoryManager;
