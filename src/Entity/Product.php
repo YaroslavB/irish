@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Uid\Uuid;
@@ -21,7 +22,7 @@ class Product
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
 
     /**
@@ -83,6 +84,11 @@ class Product
     private $category;
 
     /**
+     * @ORM\OneToMany(targetEntity=CartProduct::class, mappedBy="product", orphanRemoval=true)
+     */
+    private $quatity;
+
+    /**
      * Product constructor.
      */
     public function __construct()
@@ -92,6 +98,7 @@ class Product
         $this->isPublished = false;
         $this->isDeleted = false;
         $this->productImages = new ArrayCollection();
+        $this->quatity = new ArrayCollection();
     }
 
 
@@ -239,6 +246,36 @@ class Product
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CartProduct>
+     */
+    public function getQuatity(): Collection
+    {
+        return $this->quatity;
+    }
+
+    public function addQuatity(CartProduct $quatity): self
+    {
+        if (!$this->quatity->contains($quatity)) {
+            $this->quatity[] = $quatity;
+            $quatity->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuatity(CartProduct $quatity): self
+    {
+        // set the owning side to null (unless already changed)
+        if ($this->quatity->removeElement($quatity)
+            && $quatity->getProduct() === $this
+        ) {
+            $quatity->setProduct(null);
+        }
 
         return $this;
     }
