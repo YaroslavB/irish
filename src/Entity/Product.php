@@ -3,14 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Uid\Uuid;
-use Symfony\Component\Uid\UuidV1;
-
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -22,15 +19,12 @@ class Product
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private ?int $id;
-
+    private $id;
 
     /**
-     * @ORM\Column(type="uuid", nullable=true)
-     * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
+     * @ORM\Column(type="uuid")
      */
-
-    private ?UuidV1 $uuid;
+    private $uuid;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -48,33 +42,33 @@ class Product
     private $quantity;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
      */
-    private DateTimeImmutable $createdAt;
+    private $createdAt;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $isPublished;
+    private $isPublished;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $isDeleted;
+    private $isDeleted;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProductImage::class, mappedBy="product", cascade={"persist"} ,orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=ProductImage::class, mappedBy="product", cascade={"persist"}, orphanRemoval=true)
      */
     private $productImages;
 
     /**
      * @Gedmo\Slug(fields={"title"})
-     * @ORM\Column(type="string", length=128, nullable=true)
+     * @ORM\Column(type="string", length=128, unique=true, nullable=true)
      */
     private $slug;
 
@@ -86,25 +80,26 @@ class Product
     /**
      * @ORM\OneToMany(targetEntity=CartProduct::class, mappedBy="product", orphanRemoval=true)
      */
-    private $quatity;
+    private $cartProducts;
 
-    /**
-     * Product constructor.
-     */
     public function __construct()
     {
-        $this->uuid = Uuid::v1();
-        $this->createdAt = new DateTimeImmutable();
+        $this->uuid = Uuid::v4();
+        $this->createdAt = new \DateTimeImmutable();
         $this->isPublished = false;
         $this->isDeleted = false;
         $this->productImages = new ArrayCollection();
-        $this->quatity = new ArrayCollection();
+        $this->cartProducts = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
     }
 
     public function getTitle(): ?string
@@ -143,12 +138,12 @@ class Product
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -160,14 +155,14 @@ class Product
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-    public function isIsPublished(): ?bool
+    public function getIsPublished(): ?bool
     {
         return $this->isPublished;
     }
@@ -179,7 +174,7 @@ class Product
         return $this;
     }
 
-    public function isIsDeleted(): ?bool
+    public function getIsDeleted(): ?bool
     {
         return $this->isDeleted;
     }
@@ -192,9 +187,9 @@ class Product
     }
 
     /**
-     *
+     * @return Collection|ProductImage[]
      */
-    public function getProductImages()
+    public function getProductImages(): Collection
     {
         return $this->productImages;
     }
@@ -211,10 +206,11 @@ class Product
 
     public function removeProductImage(ProductImage $productImage): self
     {
-        if ($this->productImages->removeElement($productImage)
-            && $productImage->getProduct() === $this
-        ) {
-            $productImage->setProduct($this);
+        if ($this->productImages->removeElement($productImage)) {
+            // set the owning side to null (unless already changed)
+            if ($productImage->getProduct() === $this) {
+                $productImage->setProduct(null);
+            }
         }
 
         return $this;
@@ -232,12 +228,6 @@ class Product
         return $this;
     }
 
-
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
     public function getCategory(): ?Category
     {
         return $this->category;
@@ -251,30 +241,30 @@ class Product
     }
 
     /**
-     * @return Collection<int, CartProduct>
+     * @return Collection|CartProduct[]
      */
-    public function getQuatity(): Collection
+    public function getCartProducts(): Collection
     {
-        return $this->quatity;
+        return $this->cartProducts;
     }
 
-    public function addQuatity(CartProduct $quatity): self
+    public function addCartProduct(CartProduct $cartProduct): self
     {
-        if (!$this->quatity->contains($quatity)) {
-            $this->quatity[] = $quatity;
-            $quatity->setProduct($this);
+        if (!$this->cartProducts->contains($cartProduct)) {
+            $this->cartProducts[] = $cartProduct;
+            $cartProduct->setProduct($this);
         }
 
         return $this;
     }
 
-    public function removeQuatity(CartProduct $quatity): self
+    public function removeCartProduct(CartProduct $cartProduct): self
     {
-        // set the owning side to null (unless already changed)
-        if ($this->quatity->removeElement($quatity)
-            && $quatity->getProduct() === $this
-        ) {
-            $quatity->setProduct(null);
+        if ($this->cartProducts->removeElement($cartProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($cartProduct->getProduct() === $this) {
+                $cartProduct->setProduct(null);
+            }
         }
 
         return $this;

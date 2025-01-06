@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CartProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * @ORM\Entity(repositoryClass=CartProductRepository::class)
  */
@@ -15,16 +16,16 @@ class CartProduct
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private ?int $id;
+    private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Cart::class, inversedBy="product")
+     * @ORM\ManyToOne(targetEntity=Cart::class, inversedBy="cartProducts")
      * @ORM\JoinColumn(nullable=false)
      */
     private $cart;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="quatity")
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="cartProducts")
      * @ORM\JoinColumn(nullable=false)
      */
     private $product;
@@ -32,7 +33,7 @@ class CartProduct
     /**
      * @ORM\Column(type="integer")
      */
-    private $quatity;
+    private $quantity;
 
     public function getId(): ?int
     {
@@ -63,14 +64,14 @@ class CartProduct
         return $this;
     }
 
-    public function getQuatity(): ?int
+    public function getQuantity(): ?int
     {
-        return $this->quatity;
+        return $this->quantity;
     }
 
-    public function setQuatity(int $quatity): self
+    public function setQuantity(int $quantity): self
     {
-        $this->quatity = $quatity;
+        $this->quantity = $quantity;
 
         return $this;
     }
