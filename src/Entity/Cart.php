@@ -17,12 +17,12 @@ class Cart
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $sessionId;
+    private string $sessionId;
 
     /**
      * @ORM\Column(type="datetime")
@@ -53,7 +53,6 @@ class Cart
     public function setSessionId(string $sessionId): self
     {
         $this->sessionId = $sessionId;
-
         return $this;
     }
 

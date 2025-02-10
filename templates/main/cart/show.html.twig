@@ -10,11 +10,12 @@
             <div class="row">
                 <div class="col-lg-12 mb-2 text-center">
                     <div class="page-details mt-4">
-                        <h1 class="h4 mb-3 font-weight-normal title-gradient-1">Your cart</h1>
+                        <h1 class="h4 mb-3 font-weight-normal title-gradient-1">Your cart:</h1>
                         <div class="row">
                             <div class="col-lg-12 order-block">
                                 <div class="order-content">
                                     {% if cart %}
+                                        {% set cartPriceTotal = 0 %}
                                         <table class="table table-cart table-mobile main-cart-show">
                                             <thead>
                                             <tr>
@@ -26,21 +27,31 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {% for cartProduct in cart.product %}
+                                            {% for cartProduct in cart.cartProducts %}
                                                 {% set product = cartProduct.product %}
+                                                {% set images = product.getProductImages().getValues() %}
+
                                                 <tr>
                                                     <td class="product-col">
                                                         <div class="text-center">
-                                                            <figure>
+                                                            <figure class="figure">
+                                                                {% if images|length %}
+                                                                    {% set cover = images[0] %}
                                                                 <a href="{{ path('main_product_show', {'uuid': product.uuid}) }}"
                                                                    target="_blank">
                                                                     <img
-                                                                            src=""
+                                                                            src="{{ asset('uploads/images/products/' ~ product.id ~ '/'~cover.fileNameSmall) }}"
                                                                             alt="{{ product.title }}"
                                                                     />
                                                                 </a>
-
+                                                                {% endif %}
                                                             </figure>
+                                                            <div class="product-title">
+                                                                <a href="{{ path('main_product_show', {'uuid': product.uuid}) }}"
+                                                                   target="_blank">
+                                                                    {{ product.title }}
+                                                                </a>
+                                                            </div>
 
                                                         </div>
                                                     </td>
@@ -48,7 +59,12 @@
                                                         ${{ product.price }}
                                                     </td>
                                                     <td class="quantity-col">
-                                                        {{ product.quantity }}
+                                                        {{ cartProduct.quantity }}
+                                                    </td>
+                                                    <td class="total-col">
+                                                        {% set cartProductTotal = cartProduct.quantity*product.price %}
+                                                        {% set cartPriceTotal = cartPriceTotal + cartProductTotal %}
+                                                        ${{ cartProductTotal }}
                                                     </td>
 
                                                 </tr>
@@ -56,6 +72,12 @@
                                             {% endfor %}
                                             </tbody>
                                         </table>
+
+                                        <div class="mb-2 mt-2">
+                                            Total: <strong>${{ cartPriceTotal }}</strong>
+                                        </div>
+                                        <a class="btn btn-success mb-3 text-white">Make order</a>
+
                                     {% else %}
                                         <div class="alert alert-info" role="alert">
                                             Your cart is empty!

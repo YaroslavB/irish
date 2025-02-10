@@ -47,13 +47,13 @@ class CartApiController extends AbstractController
         if (!$cartProduct) {
             $cartProduct = new CartProduct();
             $cartProduct->setCart($cart);
-            $cartProduct->setQuatity(1);
+            $cartProduct->setQuantity(1);
             $cartProduct->setProduct($product);
         } else {
-            $cartProduct->setQuatity($cartProduct->getQuatity() + 1);
+            $cartProduct->setQuantity($cartProduct->getQuantity() + 1);
         }
 
-        $cart->addProduct($cartProduct);
+        $cart->addCartProduct($cartProduct);
         $entityManager = $doctrine->getManager();
         $entityManager->persist($cart);
         $entityManager->persist($cartProduct);

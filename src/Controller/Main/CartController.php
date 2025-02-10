@@ -19,9 +19,6 @@ class CartController extends AbstractController
     ): Response {
         $sessionId = $request->cookies->get('PHPSESSID');
         $cart = $cartRepository->findOneBy(['sessionId' => $sessionId]);
-        dd($cart);
-
-        // todo  if not empty show cart
         return $this->render('main/cart/show.html.twig', [
             'cart' => $cart,
         ]);
