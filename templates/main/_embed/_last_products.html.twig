@@ -11,8 +11,8 @@
                         <div class="row">
                             {% for product in product %}
                             {% set images = product.getProductImages().getValues() %}
-                            {% set cover = images[0] %}
                             {% if images|length %}
+                            {% set cover = images[0] %}
                             {% if productsCount <= 4 %}
                             <div class="col-6 col-md-4 col-lg-4 col-xl-3">
                                 {% elseif productsCount > 4 %}
@@ -26,7 +26,6 @@
                                                 <img src="{{ asset('uploads/images/products/' ~ product.id ~ '/' ~ cover.getFilenameMiddle()) }}"
                                                      alt="{{ product.title }}"
                                                      class="product-image">
-
                                             </a>
 
                                             <div class="product-actions">
