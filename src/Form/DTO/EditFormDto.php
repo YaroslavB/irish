@@ -84,8 +84,8 @@ class EditFormDto
         $dto->price = $product->getPrice();
         $dto->quantity = $product->getQuantity();
         $dto->description = $product->getDescription();
-        $dto->isPublished = $product->isIsPublished();
-        $dto->isDeleted = $product->isIsDeleted();
+        $dto->isPublished = $product->getIsPublished();
+        $dto->isDeleted = $product->getIsDeleted();
 
         return $dto;
     }
