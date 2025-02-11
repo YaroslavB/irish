@@ -88,11 +88,11 @@ class Cart
 
     public function removeCartProduct(CartProduct $cartProduct): self
     {
-        if ($this->cartProducts->removeElement($cartProduct)) {
-            // set the owning side to null (unless already changed)
-            if ($cartProduct->getCart() === $this) {
-                $cartProduct->setCart(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->cartProducts->removeElement($cartProduct)
+            && $cartProduct->getCart() === $this
+        ) {
+            $cartProduct->setCart(null);
         }
 
         return $this;
