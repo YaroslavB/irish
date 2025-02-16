@@ -51,7 +51,8 @@
                             </div>
 
                             <div class="product-full-action">
-                                <a href="#" class="btn btn-link btn-dark">
+                                <a href="#" class="btn btn-link btn-dark"
+                                   onclick="addProductToCart('{{ product.uuid }}')">
                                     <i class="fas fa-cart-plus"></i>
                                     <span>add to cart</span>
                                 </a>
@@ -73,6 +74,19 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const urlToSaveProduct = '{{ path('main_api_cart_save') }}';
+
+        function addProductToCart(uuid) {
+            const formData = new FormData();
+            formData.append('productId', uuid);
+            axios.post(urlToSaveProduct, formData);
+        }
+    </script>
 {% endblock %}
 
 
