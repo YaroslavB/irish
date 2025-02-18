@@ -9,15 +9,15 @@ use App\Security\Verifier\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mailer\Transport;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\{HttpFoundation\Request,
+    HttpFoundation\Response,
+    Mailer\Exception\TransportExceptionInterface,
+    Mailer\Mailer,
+    Mailer\Transport,
+    Mime\Address,
+    Mime\Email,
+    PasswordHasher\Hasher\UserPasswordHasherInterface,
+    Routing\Annotation\Route};
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
@@ -33,7 +33,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/test", name="test")
      */
-    public function test()
+    public function test(): Response
     {
         //TODO Send email for test need  delete this
         $email = (new Email())

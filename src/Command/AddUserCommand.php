@@ -26,17 +26,17 @@ class AddUserCommand extends Command
     /**
      * AddUserCommand constructor.
      */
-    public function __construct(
-        string $name = null,
-        EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $password_hasher,
-        UserRepository $userRepository
-    ) {
-        parent::__construct($name);
-        $this->entityManager = $entityManager;
-        $this->password_hasher = $password_hasher;
-        $this->userRepository = $userRepository;
-    }
+//    public function __construct(
+//        $name ,
+//        EntityManagerInterface $entityManager,
+//        UserPasswordHasherInterface $password_hasher,
+//        UserRepository $userRepository
+//    ) {
+//        parent::__construct(sting $name);
+//        $this->entityManager = $entityManager;
+//        $this->password_hasher = $password_hasher;
+//        $this->userRepository = $userRepository;
+//    }
 
     protected function configure(): void
     {
