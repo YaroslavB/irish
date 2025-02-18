@@ -14,11 +14,6 @@
 
     <hr class="sidebar-divider">
 
-    <div class="sidebar-heading">
-        Sales
-    </div>
-
-    <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
         Products
@@ -48,6 +43,22 @@
                 <a class="collapse-item" href="{{ path('admin_product_add') }}">Add new</a>
             </div>
         </div>
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">Sales</div>
+
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrders"
+           aria-expanded="true" aria-controls="collapseOrders">
+            <i class="fas fa-fw fa-credit-card"></i>
+            <span>Orders</span>
+        </a>
+        <div id="collapseOrders" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="py-2 collapse-inner">
+                <a class="collapse-item" href="{{ path('admin_order_list') }}">All Orders list</a>
+                <a class="collapse-item" href="{{ path('admin_order_add') }}">Add new</a>
+            </div>
+        </div>
+
+
     </li>
 
     <hr class="sidebar-divider">

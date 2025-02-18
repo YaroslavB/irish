@@ -86,4 +86,14 @@ class OrderManager extends AbstractManager
         $this->cartManager->remove($cart);
     }
 
+    /**
+     * @param object $entity
+     */
+    public function save(object $entity): void
+    {
+        $entity->setUpdatedAt(new \DateTimeImmutable());
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+    }
+
 }
