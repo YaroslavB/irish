@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y zlib1g-dev g++ git libicu-dev zip libzi
     && pecl install amqp \
     && docker-php-ext-enable amqp
 
+# Xdebug
+RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 WORKDIR /var/www/irish
 
