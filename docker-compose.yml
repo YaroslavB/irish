@@ -12,6 +12,7 @@ services:
     build:
       context: ./docker/php
     ports:
+      - '9003:9003'
       - '9000:9000'
       - '2525:2525'
     volumes:
