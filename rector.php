@@ -6,6 +6,7 @@ use Rector\Config\RectorConfig;
 use Rector\Symfony\Set\SymfonySetList;
 
 return RectorConfig::configure()
+    ->withImportNames()
     ->withSymfonyContainerXml(
         __DIR__.'/var/cache/dev/App_KernelDevDebugContainer.xml'
     )
@@ -13,4 +14,5 @@ return RectorConfig::configure()
         SymfonySetList::SYMFONY_60,
         SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
+        SymfonySetList::CONFIGS,
     ]);
