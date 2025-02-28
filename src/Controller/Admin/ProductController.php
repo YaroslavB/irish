@@ -13,15 +13,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/admin/product", name="admin_product_")
- */
+#[Route(path: '/admin/product', name: 'admin_product_')]
 class ProductController extends AbstractController
 {
     /**
      * Show all product
-     * @Route("/list", name="list")
      */
+    #[Route(path: '/list', name: 'list')]
     public function list(ProductRepository $productRepository): Response
     {
         $products = $productRepository->findBy(
@@ -38,9 +36,9 @@ class ProductController extends AbstractController
 
     /**
      * Add and Edit product
-     * @Route("/edit/{id}", name="edit")
-     * @Route("/add", name="add")
      */
+    #[Route(path: '/edit/{id}', name: 'edit')]
+    #[Route(path: '/add', name: 'add')]
     public function edit(
         Request $request,
         ProductFormHandler $formHandler,
@@ -50,7 +48,6 @@ class ProductController extends AbstractController
         $editProductDto = EditFormDto::fromProduct($product);
         $form = $this->createForm(EditFormProductType::class, $editProductDto);
 
-        // dd($editProductDto, $form,$request,$form->getData());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -82,8 +79,8 @@ class ProductController extends AbstractController
 
     /**
      * Delete  product
-     * @Route("/delete/{id}", name="delete")
      */
+    #[Route(path: '/delete/{id}', name: 'delete')]
     public function delete(
         Product $product,
         ProductManager $productManager

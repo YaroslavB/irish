@@ -9,15 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/admin/product-image", name="app_admin_product_image_")
- */
+#[Route(path: '/admin/product-image', name: 'app_admin_product_image_')]
 class ProductImageController extends AbstractController
 {
 
-    /**
-     * @Route("/delete/{id}", name="delete")
-     */
+    #[Route(path: '/delete/{id}', name: 'delete')]
     public function delete(
         ProductImage $productImage,
         ProductManager $productManager,

@@ -14,15 +14,13 @@ use Symfony\Component\{HttpFoundation\Request,
     Routing\Annotation\Route};
 
 
-/**
- * @Route("/admin/order", name="admin_order_")
- */
+#[Route(path: '/admin/order', name: 'admin_order_')]
 class OrderController extends AbstractController
 {
     /**
      * Show all orders
-     * @Route("/list", name="list")
      */
+    #[Route(path: '/list', name: 'list')]
     public function list(OrderRepository $orderRepository): Response
     {
         $orders = $orderRepository->findBy(['isDeleted' => false],
@@ -37,10 +35,8 @@ class OrderController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/edit/{id}", name="edit")
-     * @Route("/add", name="add")
-     */
+    #[Route(path: '/edit/{id}', name: 'edit')]
+    #[Route(path: '/add', name: 'add')]
     public function edit(
         Request $request,
         OrderFormHandler $orderFormHandler,
@@ -76,8 +72,8 @@ class OrderController extends AbstractController
 
     /**
      * Delete order
-     * @Route("/delete/{id}", name="delete")
      */
+    #[Route(path: '/delete/{id}', name: 'delete')]
     public function delete(
         Order $order,
         OrderManager $orderManager

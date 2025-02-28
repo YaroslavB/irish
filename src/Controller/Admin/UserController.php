@@ -18,15 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-/**
- * @Route("/admin/user", name="admin_user_")
- */
+#[Route(path: '/admin/user', name: 'admin_user_')]
 class UserController extends AbstractController
 {
     /**
      * Show all category
-     * @Route("/list", name="list")
      */
+    #[Route(path: '/list', name: 'list')]
     public function list(UserRepository $userRepository): Response
     {
 
@@ -46,9 +44,9 @@ class UserController extends AbstractController
      * @param User|null       $user
      *
      * @return Response
-     * @Route("/edit/{id}", name="edit")
-     * @Route("/add", name="add")
      */
+    #[Route(path: '/edit/{id}', name: 'edit')]
+    #[Route(path: '/add', name: 'add')]
     public function edit(
         Request $request,
         UserFormHandler $userFormHandler,
@@ -82,8 +80,8 @@ class UserController extends AbstractController
 
     /**
      * Delete  product
-     * @Route("/delete/{id}", name="delete")
      */
+    #[Route(path: '/delete/{id}', name: 'delete')]
     public function delete(
         Category $category,
         CategoryManager $categoryManager

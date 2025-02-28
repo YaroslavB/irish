@@ -15,9 +15,9 @@ class EditCategoryDto
     public $id;
 
     /**
-     * @Assert\NotBlank(message="Title is required")
      * @var string
      */
+    #[Assert\NotBlank(message: 'Title is required')]
     public string $title;
 
     /**

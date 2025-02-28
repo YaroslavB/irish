@@ -10,9 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends AbstractController
 {
-    /**
-     * @Route("/category/{slug}", name="main_category_show")
-     */
+    #[Route(path: '/category/{slug}', name: 'main_category_show')]
     public function show(Category $category): Response
     {
         if (!$category) {

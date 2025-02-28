@@ -11,9 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CartController extends AbstractController
 {
-    /**
-     * @Route("/cart", name="main_cart_show")
-     */
+    #[Route(path: '/cart', name: 'main_cart_show')]
     public function show(
         Request $request,
         CartRepository $cartRepository
@@ -25,15 +23,13 @@ class CartController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/cart/create", name="main_cart_create")
-     */
+    #[Route(path: '/cart/create', name: 'main_cart_create')]
     public function create(
         Request $request,
         OrderManager $orderManager
     ): Response {
         $sessionId = $request->cookies->get('PHPSESSID');
-        $order = $orderManager->createOrderFromCartFromSession(
+         $orderManager->createOrderFromCartFromSession(
             $sessionId,
             $this->getUser()
         );

@@ -14,15 +14,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-/**
- * @Route("/admin/category", name="admin_category_")
- */
+#[Route(path: '/admin/category', name: 'admin_category_')]
 class CategoryController extends AbstractController
 {
     /**
      * Show all category
-     * @Route("/list", name="list")
      */
+    #[Route(path: '/list', name: 'list')]
     public function list(CategoryRepository $categoryRepository): Response
     {
         $categories = $categoryRepository->findBy(['isDeleted' => false],
@@ -40,9 +38,9 @@ class CategoryController extends AbstractController
      * @param Category|null       $category
      *
      * @return Response
-     * @Route("/edit/{id}", name="edit")
-     * @Route("/add", name="add")
      */
+    #[Route(path: '/edit/{id}', name: 'edit')]
+    #[Route(path: '/add', name: 'add')]
     public function edit(
         Request $request,
         CategoryFormHandler $categoryFormHandler,
@@ -74,8 +72,8 @@ class CategoryController extends AbstractController
 
     /**
      * Delete  product
-     * @Route("/delete/{id}", name="delete")
      */
+    #[Route(path: '/delete/{id}', name: 'delete')]
     public function delete(
         Category $category,
         CategoryManager $categoryManager

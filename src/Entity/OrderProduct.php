@@ -5,39 +5,27 @@ namespace App\Entity;
 use App\Repository\OrderProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=OrderProductRepository::class)
- */
+#[ORM\Entity(repositoryClass: OrderProductRepository::class)]
 class OrderProduct
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="orderProducts")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $appOrder;
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'orderProducts')]
+    private ?Order $appOrder = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="orderProducts")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $product;
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'orderProducts')]
+    private ?Product $product = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $quantity;
+    #[ORM\Column(type: 'integer')]
+    private ?int $quantity = null;
 
-    /**
-     * @ORM\Column(type="decimal", precision=6, scale=2)
-     */
-    private $pricePerOne;
+    #[ORM\Column(type: 'decimal', precision: 6, scale: 2)]
+    private ?string $pricePerOne = null;
 
     public function getId(): ?int
     {

@@ -2,67 +2,53 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=OrderRepository::class)
- * @ORM\Table(name="`order`")
- */
+#[ORM\Table(name: '`order`')]
+#[ORM\Entity(repositoryClass: OrderRepository::class)]
 class Order
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
+    #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $owner;
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
+    private ?User $owner = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $status;
+    #[ORM\Column(type: 'integer')]
+    private ?int $status = null;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $totalPrice;
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $totalPrice = null;
 
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
+    #[ORM\Column(type: 'datetime_immutable')]
     private $updatedAt;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isDeleted;
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $isDeleted = null;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderProduct::class, mappedBy="appOrder")
+     * @var Collection<int, OrderProduct>
      */
-    private $orderProducts;
+    #[ORM\OneToMany(mappedBy: 'appOrder', targetEntity: OrderProduct::class)]
+    private Collection $orderProducts;
 
     /**
      * @param $id
      */
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
         $this->orderProducts = new ArrayCollection();
         $this->isDeleted = false;
     }
@@ -73,12 +59,12 @@ class Order
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -121,12 +107,12 @@ class Order
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -165,11 +151,11 @@ class Order
 
     public function removeOrderProduct(OrderProduct $orderProduct): self
     {
-        if ($this->orderProducts->removeElement($orderProduct)) {
-            // set the owning side to null (unless already changed)
-            if ($orderProduct->getAppOrder() === $this) {
-                $orderProduct->setAppOrder(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->orderProducts->removeElement($orderProduct)
+            && $orderProduct->getAppOrder() === $this
+        ) {
+            $orderProduct->setAppOrder(null);
         }
 
         return $this;

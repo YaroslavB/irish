@@ -2,6 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\{Metadata\Delete,
+    Metadata\Get,
+    Metadata\Post,
+    Metadata\ApiResource};
+use DateTimeInterface;
+use DateTimeImmutable;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,88 +15,75 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Uid\Uuid;
 
-/**
- * @ORM\Entity(repositoryClass=ProductRepository::class)
- */
+#[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new Post(),
+        new Delete()
+    ]
+)]
+
 class Product
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="uuid")
-     */
+    #[ORM\Column(type: 'uuid')]
     private $uuid;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $title;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $title = null;
+
+    #[ORM\Column(type: 'decimal', precision: 6, scale: 2)]
+    private ?string $price = null;
+
+    #[ORM\Column(type: 'integer')]
+    private ?int $quantity = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private DateTimeInterface $createdAt;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isPublished ;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isDeleted ;
 
     /**
-     * @ORM\Column(type="decimal", precision=6, scale=2)
+     * @var Collection<int, ProductImage>
      */
-    private $price;
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductImage::class, cascade: ['persist'], orphanRemoval: true)]
+    private Collection $productImages;
+
+    #[Gedmo\Slug(fields: ["title"])]
+    #[ORM\Column(type: 'string', length: 128, unique: true, nullable: true)]
+    private ?string $slug = null;
+
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'products')]
+    private ?Category $category = null;
 
     /**
-     * @ORM\Column(type="integer")
+     * @var Collection<int, CartProduct>
      */
-    private $quantity;
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: CartProduct::class, orphanRemoval: true)]
+    private Collection $cartProducts;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @var Collection<int, OrderProduct>
      */
-    private $createdAt;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isPublished;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isDeleted;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ProductImage::class, mappedBy="product", cascade={"persist"}, orphanRemoval=true)
-     */
-    private $productImages;
-
-    /**
-     * @Gedmo\Slug(fields={"title"})
-     * @ORM\Column(type="string", length=128, unique=true, nullable=true)
-     */
-    private $slug;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
-     */
-    private $category;
-
-    /**
-     * @ORM\OneToMany(targetEntity=CartProduct::class, mappedBy="product", orphanRemoval=true)
-     */
-    private $cartProducts;
-
-    /**
-     * @ORM\OneToMany(targetEntity=OrderProduct::class, mappedBy="product")
-     */
-    private $orderProducts;
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: OrderProduct::class)]
+    private Collection $orderProducts;
 
     public function __construct()
     {
         $this->uuid = Uuid::v4();
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
         $this->isPublished = false;
         $this->isDeleted = false;
         $this->productImages = new ArrayCollection();
@@ -144,12 +137,12 @@ class Product
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -212,11 +205,11 @@ class Product
 
     public function removeProductImage(ProductImage $productImage): self
     {
-        if ($this->productImages->removeElement($productImage)) {
-            // set the owning side to null (unless already changed)
-            if ($productImage->getProduct() === $this) {
-                $productImage->setProduct(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->productImages->removeElement($productImage)
+            && $productImage->getProduct() === $this
+        ) {
+            $productImage->setProduct(null);
         }
 
         return $this;
@@ -266,11 +259,11 @@ class Product
 
     public function removeCartProduct(CartProduct $cartProduct): self
     {
-        if ($this->cartProducts->removeElement($cartProduct)) {
-            // set the owning side to null (unless already changed)
-            if ($cartProduct->getProduct() === $this) {
-                $cartProduct->setProduct(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->cartProducts->removeElement($cartProduct)
+            && $cartProduct->getProduct() === $this
+        ) {
+            $cartProduct->setProduct(null);
         }
 
         return $this;
@@ -296,11 +289,11 @@ class Product
 
     public function removeOrderProduct(OrderProduct $orderProduct): self
     {
-        if ($this->orderProducts->removeElement($orderProduct)) {
-            // set the owning side to null (unless already changed)
-            if ($orderProduct->getProduct() === $this) {
-                $orderProduct->setProduct(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->orderProducts->removeElement($orderProduct)
+            && $orderProduct->getProduct() === $this
+        ) {
+            $orderProduct->setProduct(null);
         }
 
         return $this;

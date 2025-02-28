@@ -15,15 +15,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/api", name="main_api_")
- */
+#[Route(path: '/api', name: 'main_api_')]
 class CartApiController extends AbstractController
 {
 
-    /**
-     * @Route("/cart",methods="POST", name="cart_save")
-     */
+    #[Route(path: '/cart', methods: 'POST', name: 'cart_save')]
     public function saveCart(
         Request $request,
         ProductRepository $productRepository,

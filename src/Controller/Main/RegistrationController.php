@@ -30,9 +30,7 @@ class RegistrationController extends AbstractController
         $this->emailVerifier = $emailVerifier;
     }
 
-    /**
-     * @Route("/test", name="test")
-     */
+    #[Route(path: '/test', name: 'test')]
     public function test(): Response
     {
         //TODO Send email for test need  delete this
@@ -58,9 +56,7 @@ class RegistrationController extends AbstractController
         return new Response('ok');
     }
 
-    /**
-     * @Route("/register", name="app_register")
-     */
+    #[Route(path: '/register', name: 'app_register')]
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
@@ -111,9 +107,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/verify/email", name="app_verify_email")
-     */
+    #[Route(path: '/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(
         Request $request,
         TranslatorInterface $translator,

@@ -10,9 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProductController extends AbstractController
 {
-    /**
-     * @Route("/product/{uuid}", name="main_product_show")
-     */
+    #[Route(path: '/product/{uuid}', name: 'main_product_show')]
     public function show(Product $product = null): Response
     {
         if (!$product) {

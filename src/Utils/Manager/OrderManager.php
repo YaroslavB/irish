@@ -2,6 +2,7 @@
 
 namespace App\Utils\Manager;
 
+use DateTimeImmutable;
 use App\Entity\Cart;
 use App\Entity\CartProduct;
 use App\Entity\Order;
@@ -91,7 +92,7 @@ class OrderManager extends AbstractManager
      */
     public function save(object $entity): void
     {
-        $entity->setUpdatedAt(new \DateTimeImmutable());
+        $entity->setUpdatedAt(new DateTimeImmutable());
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
     }

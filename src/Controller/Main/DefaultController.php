@@ -10,13 +10,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
-    /**
-     * @Route("/", name="homepage")
-     */
+    #[Route(path: '/', name: 'homepage')]
     public function index(ManagerRegistry $doctrine): Response
     {
         $entityManager = $doctrine->getManager();
-        $productList = $entityManager
+        $entityManager
             ->getRepository(Product::class)
             ->findAll();
 

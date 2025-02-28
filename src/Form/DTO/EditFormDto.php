@@ -15,23 +15,23 @@ class EditFormDto
     public $id;
 
     /**
-     * @Assert\NotBlank(message="Title is required")
      * @var string
      */
+    #[Assert\NotBlank(message: 'Title is required')]
     public $title;
 
     /**
-     * @Assert\NotBlank(message="Price is required")
-     * @Assert\GreaterThanOrEqual(value="0")
      * @var string|null
      */
+    #[Assert\NotBlank(message: 'Price is required')]
+    #[Assert\GreaterThanOrEqual(value: '0')]
     public $price;
 
     /**
-     * @Assert\NotBlank(message="Quantity is required")
-     * @Assert\GreaterThan(value="0")
      * @var int
      */
+    #[Assert\NotBlank(message: 'Quantity is required')]
+    #[Assert\GreaterThan(value: '0')]
     public $quantity;
 
     /**
@@ -41,19 +41,15 @@ class EditFormDto
 
 
     /**
-     * @Assert\NotBlank(message="Category is required")
      * @var Category
      */
+    #[Assert\NotBlank(message: 'Category is required')]
     public $category;
 
     /**
-     * @Assert\File(
-     *     maxSize = "5024k",
-     *     mimeTypes = {"image/jpeg", "image/png"},
-     *     mimeTypesMessage = "Please upload a valid image"
-     * )
      * @var UploadedFile|null
      */
+    #[Assert\File(maxSize: '5024k', mimeTypes: ['image/jpeg', 'image/png'], mimeTypesMessage: 'Please upload a valid image')]
     public $newImage;
     /**
      * @var bool
