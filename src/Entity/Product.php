@@ -2,10 +2,9 @@
 
 namespace App\Entity;
 
-use ApiPlatform\{Metadata\Delete,
-    Metadata\Get,
-    Metadata\Post,
-    Metadata\ApiResource};
+
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 use DateTimeInterface;
 use DateTimeImmutable;
 use App\Repository\ProductRepository;
@@ -13,43 +12,59 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
-    operations: [
-        new Get(),
-        new Post(),
-        new Delete()
+    collectionOperations: [
+        'get'=>['normalization_context' => ['groups' => ['product:read']]],
+        'post'=>[
+            'normalization_context' => ['groups' => ['product:write']],
+            'security' => 'is_granted("ROLE_ADMIN")'
+        ],
+    ],
+    itemOperations: [
+        'get'=>['normalization_context' => ['groups' => ['product:item']]],
+        'put'=>[],
     ]
 )]
-
 class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['product:read','product:item'])]
+    #[ApiProperty(identifier: false)]
     private ?int $id = null;
 
     #[ORM\Column(type: 'uuid')]
+    #[Groups(['product:read','product:item'])]
+    #[ApiProperty(identifier: true)]
     private $uuid;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['product:read', 'product:write', 'product:item'])]
     private ?string $title = null;
 
     #[ORM\Column(type: 'decimal', precision: 6, scale: 2)]
+    #[Groups(['product:read', 'product:write', 'product:item'])]
     private ?string $price = null;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['product:read','product:write','product:item'])]
     private ?int $quantity = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['product:read','product:item'])]
     private DateTimeInterface $createdAt;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['product:read','product:write', 'product:item'])]
     private ?string $description = null;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups(['product:write'])]
     private bool $isPublished ;
 
     #[ORM\Column(type: 'boolean')]
@@ -59,6 +74,7 @@ class Product
      * @var Collection<int, ProductImage>
      */
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductImage::class, cascade: ['persist'], orphanRemoval: true)]
+    #[Groups(['product:read','product:item'])]
     private Collection $productImages;
 
     #[Gedmo\Slug(fields: ["title"])]
@@ -66,6 +82,7 @@ class Product
     private ?string $slug = null;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'products')]
+    #[Groups(['product:read','product:write', 'product:item'])]
     private ?Category $category = null;
 
     /**

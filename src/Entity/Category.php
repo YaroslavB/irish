@@ -2,25 +2,37 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ApiResource(
+    collectionOperations: [
+        'get' => ['normalization_context' => ['groups' => ['category:read']]],
+    ],
+    itemOperations: [
+        'get' => ['normalization_context' => ['groups' => ['category:read:item']]],
+    ]
+)]
 class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups([ 'category:read','category:read:item','product:read','product:item'])]
     private ?int $id = null;
 
     
     #[ORM\Column(type: 'string', length: 100)]
+    #[Groups([ 'category:read','category:read:item','product:read','product:item'])]
     private ?string $title = null;
 
-   // #[Gedmo\Slug(fields: ["title"])]
+    #[Gedmo\Slug(fields: ["title"])]
     #[ORM\Column(type: 'string', length: 120, unique: true)]
     private ?string $slug = null;
 

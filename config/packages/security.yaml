@@ -51,6 +51,7 @@ security:
     access_control:
         - { path: ^/admin/login }
         - { path: ^/admin/user, roles: ROLE_SUPER_ADMIN }
+        #- { path: ^/api$, roles: ROLE_SUPER_ADMIN }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
 

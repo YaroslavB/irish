@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use DateTimeInterface;
 use DateTimeImmutable;
 use App\Repository\CartRepository;
@@ -48,6 +49,7 @@ class Cart
     public function setSessionId(string $sessionId): self
     {
         $this->sessionId = $sessionId;
+
         return $this;
     }
 

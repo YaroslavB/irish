@@ -3,12 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Category;
-use App\Entity\StaticStorage\UserStaticStorage;
 use App\Entity\User;
-use App\Form\Admin\EditFormCategoryType;
 use App\Form\Admin\EditUserFormType;
-use App\Form\DTO\EditCategoryDto;
-use App\Form\Handler\CategoryFormHandler;
 use App\Form\Handler\UserFormHandler;
 use App\Repository\UserRepository;
 use App\Utils\Manager\CategoryManager;
@@ -27,11 +23,11 @@ class UserController extends AbstractController
     #[Route(path: '/list', name: 'list')]
     public function list(UserRepository $userRepository): Response
     {
-
         $users = $userRepository->findBy(
             ['isDeleted' => false],
             ['id' => 'DESC']
         );
+
         return $this->render(
             'admin/user/list.html.twig',
             ['users' => $users]
@@ -39,9 +35,9 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param Request         $request
+     * @param Request $request
      * @param UserFormHandler $userFormHandler
-     * @param User|null       $user
+     * @param User|null $user
      *
      * @return Response
      */
@@ -52,8 +48,7 @@ class UserController extends AbstractController
         UserFormHandler $userFormHandler,
         User $user = null
     ): Response {
-
-        if(!$user){
+        if (!$user) {
             $user = new User();
         }
         $form = $this->createForm(EditUserFormType::class, $user);
@@ -63,6 +58,7 @@ class UserController extends AbstractController
             $user = $userFormHandler->processEditForm($form);
 
             $this->addFlash('success', 'User  saved');
+
             return $this->redirectToRoute(
                 'admin_user_edit',
                 ['id' => $user->getId()]
@@ -73,7 +69,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('admin/user/edit.html.twig', [
-            'form'     => $form->createView(),
+            'form' => $form->createView(),
             'user' => $user,
         ]);
     }
@@ -85,10 +81,10 @@ class UserController extends AbstractController
     public function delete(
         Category $category,
         CategoryManager $categoryManager
-    ): Response
-    {
+    ): Response {
         $categoryManager->remove($category);
         $this->addFlash('warning', 'Product delete');
+
         return $this->redirectToRoute('admin_category_list');
     }
 }
