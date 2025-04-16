@@ -1,7 +1,7 @@
 api_platform:
-    title:  API Platform
+    title:  API WebShop
     version: 1.0.0
-    description: API Platform
+    description: API Platform for Symfony
     # Mercure integration, remove if unwanted
     #metadata_backward_compatibility_layer: false
     mapping:
@@ -10,3 +10,4 @@ api_platform:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
+    show_webby: false

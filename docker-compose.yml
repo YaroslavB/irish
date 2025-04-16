@@ -3,6 +3,18 @@ networks:
     driver: bridge
 
 services:
+ # Node.js
+ # node:
+ #   container_name: node_irish
+ #   image: node:latest
+ #   working_dir: /app
+ #   volumes:
+ #     - ./frontend:/app
+ #   ports:
+ #     - "3000:3000"
+ #   command: [ "npm", "start" ]
+ #   networks:
+ #     - irish-network
   php:
     container_name: php_irish
     environment:
