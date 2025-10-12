@@ -26,17 +26,16 @@ class AddUserCommand extends Command
     /**
      * AddUserCommand constructor.
      */
-//    public function __construct(
-//        string $name,
-//        EntityManagerInterface $entityManager,
-//        UserPasswordHasherInterface $password_hasher,
-//        UserRepository $userRepository
-//    ) {
-//        parent::__construct($name);
-//        $this->entityManager = $entityManager;
-//        $this->password_hasher = $password_hasher;
-//        $this->userRepository = $userRepository;
-//    }
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $password_hasher,
+        UserRepository $userRepository
+    ) {
+        parent::__construct();
+        $this->entityManager = $entityManager;
+        $this->password_hasher = $password_hasher;
+        $this->userRepository = $userRepository;
+    }
 
     protected function configure(): void
     {
@@ -123,10 +122,10 @@ class AddUserCommand extends Command
 //        if ($input->getOption('option1')) {
 //            // ...
 //        }
-//
-//        $io->success(
-//            'You have a new command! Now make it your own! Pass --help to see your options.'
-//        );
+
+        $io->success(
+            'You have a new command! Now make it your own! Pass --help to see your options.'
+        );
 
         return Command::SUCCESS;
     }
