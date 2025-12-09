@@ -17,6 +17,7 @@ services:
       - '2525:2525'
     volumes:
       - ./:/var/www/irish
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini:ro
       # xdebug
       - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     depends_on:
