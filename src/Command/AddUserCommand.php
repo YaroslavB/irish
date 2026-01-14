@@ -27,10 +27,11 @@ class AddUserCommand extends Command
      * AddUserCommand constructor.
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
+        EntityManagerInterface      $entityManager,
         UserPasswordHasherInterface $password_hasher,
-        UserRepository $userRepository
-    ) {
+        UserRepository              $userRepository
+    )
+    {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->password_hasher = $password_hasher;
@@ -62,9 +63,10 @@ class AddUserCommand extends Command
     }
 
     protected function execute(
-        InputInterface $input,
+        InputInterface  $input,
         OutputInterface $output
-    ): int {
+    ): int
+    {
         $io = new SymfonyStyle($input, $output);
         $stopwatch = new Stopwatch();
         $stopwatch->start('create-new-user');
@@ -76,13 +78,13 @@ class AddUserCommand extends Command
         $io->title('Please add new user:');
         $io->text(['Add user email and password']);
 
-        if ( ! $email) {
+        if (!$email) {
             $email = $io->ask('Enter user email');
         }
-        if ( ! $password) {
+        if (!$password) {
             $password = $io->askHidden('Password (will be hidden)');
         }
-        if ( ! $isAdmin) {
+        if (!$isAdmin) {
             $question = new Question('isAdmin? 0 or 1 ', 0);
             $isAdmin = $io->askQuestion($question);
         }
@@ -113,16 +115,6 @@ class AddUserCommand extends Command
             $eventData->getMemory() / 1000 / 1000
         );
         $io->comment($stopwatchMassage);
-
-
-//        if ($email) {
-//            $io->note(sprintf('You passed an argument: %s', $email));
-//        }
-//
-//        if ($input->getOption('option1')) {
-//            // ...
-//        }
-
         $io->success(
             'You have a new command! Now make it your own! Pass --help to see your options.'
         );
@@ -134,9 +126,9 @@ class AddUserCommand extends Command
     /**
      * Save user to DB
      *
-     * @param  string  $email
-     * @param  string  $password
-     * @param  bool    $isAdmin
+     * @param string $email
+     * @param string $password
+     * @param bool $isAdmin
      *
      * @return User
      */
@@ -144,8 +136,9 @@ class AddUserCommand extends Command
     private function createUser(
         string $email,
         string $password,
-        bool $isAdmin
-    ): User {
+        bool   $isAdmin
+    ): User
+    {
         $existingUser = $this->userRepository->findBy(['email' => $email]);
         if ($existingUser) {
             throw new RuntimeException('User exist with this email');

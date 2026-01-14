@@ -266,11 +266,9 @@ class Product
 
     public function removeCartProduct(CartProduct $cartProduct): self
     {
-        if ($this->cartProducts->removeElement($cartProduct)) {
+        if ($this->cartProducts->removeElement($cartProduct) && $cartProduct->getProduct() === $this) {
             // set the owning side to null (unless already changed)
-            if ($cartProduct->getProduct() === $this) {
-                $cartProduct->setProduct(null);
-            }
+            $cartProduct->setProduct(null);
         }
 
         return $this;
@@ -296,11 +294,9 @@ class Product
 
     public function removeOrderProduct(OrderProduct $orderProduct): self
     {
-        if ($this->orderProducts->removeElement($orderProduct)) {
+        if ($this->orderProducts->removeElement($orderProduct) && $orderProduct->getProduct() === $this) {
             // set the owning side to null (unless already changed)
-            if ($orderProduct->getProduct() === $this) {
-                $orderProduct->setProduct(null);
-            }
+            $orderProduct->setProduct(null);
         }
 
         return $this;

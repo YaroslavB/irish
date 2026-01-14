@@ -19,9 +19,9 @@ class CategoryFormHandler
     /**
      * @param EditCategoryDto $editCategoryDto
      *
-     * @return Category|mixed
+     * @return Category
      */
-    public function processEditForm(EditCategoryDto $editCategoryDto)
+    public function processEditForm(EditCategoryDto $editCategoryDto): Category
     {
         $category = new Category();
         if ($editCategoryDto->id) {
