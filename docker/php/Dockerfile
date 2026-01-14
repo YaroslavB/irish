@@ -1,8 +1,6 @@
 FROM php:8.1-fpm
 
-ENV COMPOSER_ALLOW_SUPERUSER=1
-
-RUN apt-get update && apt-get install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip openssl \
+RUN apt-get update && apt-get install -y zlib1g-dev g++ git libicu-dev zip libzip-dev openssl \
     librabbitmq-dev \
     libfreetype6-dev \
     libpng-dev \
@@ -30,7 +28,5 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN curl -sS https://get.symfony.com/cli/installer | bash
 RUN mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
-# Fix permissions
-RUN usermod -u 1000 www-data
-
-WORKDIR /var/www/irish
+RUN git config --global user.email "yaroslav.bailo@gmail.com" \
+    && git config --global user.name "Yaroslav"
