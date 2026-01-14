@@ -36,7 +36,6 @@ class EmailVerifier
         UserInterface $user,
         TemplatedEmail $email
     ): void {
-        //@todo: send email not correct work
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
             $user->getId(),

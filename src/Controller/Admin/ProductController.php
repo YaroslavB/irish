@@ -50,7 +50,6 @@ class ProductController extends AbstractController
         $editProductDto = EditFormDto::fromProduct($product);
         $form = $this->createForm(EditFormProductType::class, $editProductDto);
 
-        // dd($editProductDto, $form,$request,$form->getData());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
