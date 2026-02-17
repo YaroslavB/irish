@@ -66,10 +66,12 @@ services:
       - irish-network
 
   redis:
-    container_name: radis_irish
+    container_name: redis_irish
     image: redis:latest
     ports:
-      - 6379:6379
+      - "6379:6379"
     environment:
       TZ: ${DEFAULT_TIMEZONE}
+    networks:
+      - irish-network
 
