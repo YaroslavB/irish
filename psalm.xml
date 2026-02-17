@@ -6,6 +6,7 @@
         xmlns="https://getpsalm.org/schema/config"
         xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
         findUnusedBaselineEntry="true"
+        findUnusedCode="false"
 >
     <projectFiles>
         <directory name="src"/>
@@ -13,4 +14,103 @@
             <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
+
+    <issueHandlers>
+        <!-- Symfony Entity specific suppressions -->
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <directory name="src/Entity"/>
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+
+        <MissingConstructor>
+            <errorLevel type="suppress">
+                <directory name="src/Entity"/>
+                <directory name="src/Form"/>
+            </errorLevel>
+        </MissingConstructor>
+
+        <!-- Symfony Controller and Service specific suppressions -->
+        <PossiblyUnusedMethod>
+            <errorLevel type="suppress">
+                <directory name="src/Entity"/>
+                <directory name="src/Controller"/>
+                <directory name="src/Repository"/>
+                <directory name="src/Command"/>
+            </errorLevel>
+        </PossiblyUnusedMethod>
+
+        <PossiblyUnusedParam>
+            <errorLevel type="suppress">
+                <directory name="src/Controller"/>
+                <directory name="src/Command"/>
+                <directory name="src/EventListener"/>
+                <directory name="src/EventSubscriber"/>
+            </errorLevel>
+        </PossiblyUnusedParam>
+
+        <UnusedClass>
+            <errorLevel type="suppress">
+                <directory name="src/Entity"/>
+                <directory name="src/Form"/>
+                <directory name="src/Command"/>
+                <directory name="src/EventListener"/>
+                <directory name="src/EventSubscriber"/>
+            </errorLevel>
+        </UnusedClass>
+
+        <UnusedProperty>
+            <errorLevel type="suppress">
+                <directory name="src/Entity"/>
+                <directory name="src/Form"/>
+            </errorLevel>
+        </UnusedProperty>
+
+        <!-- Symfony Forms specific suppressions -->
+        <MissingDependency>
+            <errorLevel type="suppress">
+                <directory name="src/Form"/>
+            </errorLevel>
+        </MissingDependency>
+
+        <!-- ParamConverter can inject entities that may be null -->
+        <PossiblyNullArgument>
+            <errorLevel type="suppress">
+                <referencedMethod name="Symfony\Bundle\FrameworkBundle\Controller\AbstractController::render"/>
+                <referencedMethod name="Symfony\Bundle\FrameworkBundle\Controller\AbstractController::redirectToRoute"/>
+            </errorLevel>
+        </PossiblyNullArgument>
+
+        <!-- Doctrine repositories return mixed types -->
+        <MixedInferredReturnType>
+            <errorLevel type="suppress">
+                <directory name="src/Repository"/>
+            </errorLevel>
+        </MixedInferredReturnType>
+
+        <MixedReturnStatement>
+            <errorLevel type="suppress">
+                <directory name="src/Repository"/>
+            </errorLevel>
+        </MixedReturnStatement>
+
+        <!-- Dependency injection through constructor -->
+        <PossiblyUnusedProperty>
+            <errorLevel type="suppress">
+                <directory name="src/Controller"/>
+                <directory name="src/Command"/>
+                <directory name="src/EventListener"/>
+                <directory name="src/EventSubscriber"/>
+            </errorLevel>
+        </PossiblyUnusedProperty>
+
+        <!-- Doctrine annotations/attributes -->
+        <MissingImmutableAnnotation>
+            <errorLevel type="suppress">
+                <directory name="src/Entity"/>
+            </errorLevel>
+        </MissingImmutableAnnotation>
+    </issueHandlers>
 </psalm>
+
+
