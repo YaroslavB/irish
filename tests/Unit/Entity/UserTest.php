@@ -17,7 +17,7 @@ class UserTest extends TestCase
 
     public function testNewUserHasDefaultValues(): void
     {
-        $this->assertFalse($this->user->isDeleted());
+        $this->assertFalse($this->user->isIsDeleted());
         $this->assertFalse($this->user->isVerified());
         $this->assertEmpty($this->user->getOrders());
     }
@@ -57,7 +57,7 @@ class UserTest extends TestCase
 
     public function testSetAndGetZipcode(): void
     {
-        $zipcode = 12345;
+        $zipcode = '12345';
         $this->user->setZipcode($zipcode);
         
         $this->assertSame($zipcode, $this->user->getZipcode());
@@ -98,11 +98,11 @@ class UserTest extends TestCase
 
     public function testSetAndGetIsDeleted(): void
     {
-        $this->assertFalse($this->user->isDeleted());
+        $this->assertFalse($this->user->isIsDeleted());
 
         $this->user->setIsDeleted(true);
         
-        $this->assertTrue($this->user->isDeleted());
+        $this->assertTrue($this->user->isIsDeleted());
     }
 
     public function testAddAndRemoveOrder(): void
@@ -124,4 +124,3 @@ class UserTest extends TestCase
         $this->assertTrue(true);
     }
 }
-
