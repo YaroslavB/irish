@@ -19,8 +19,8 @@ class ProductTest extends TestCase
 
     public function testNewProductHasDefaultValues(): void
     {
-        $this->assertFalse($this->product->getIsPublished());
-        $this->assertFalse($this->product->getIsDeleted());
+        $this->assertFalse($this->product->isPublished());
+        $this->assertFalse($this->product->isDeleted());
         $this->assertNotNull($this->product->getUuid());
         $this->assertNotNull($this->product->getCreatedAt());
         $this->assertEmpty($this->product->getProductImages());
@@ -61,20 +61,20 @@ class ProductTest extends TestCase
 
     public function testSetAndGetIsPublished(): void
     {
-        $this->assertFalse($this->product->getIsPublished());
-        
+        $this->assertFalse($this->product->isPublished());
+
         $this->product->setIsPublished(true);
         
-        $this->assertTrue($this->product->getIsPublished());
+        $this->assertTrue($this->product->isPublished());
     }
 
     public function testSetAndGetIsDeleted(): void
     {
-        $this->assertFalse($this->product->getIsDeleted());
-        
+        $this->assertFalse($this->product->isDeleted());
+
         $this->product->setIsDeleted(true);
         
-        $this->assertTrue($this->product->getIsDeleted());
+        $this->assertTrue($this->product->isDeleted());
     }
 
     public function testSetAndGetCategory(): void
@@ -130,9 +130,9 @@ class ProductTest extends TestCase
 
     public function testCreatedAtIsSetOnConstruction(): void
     {
-        $this->assertInstanceOf(\DateTimeInterface::class, $this->product->getCreatedAt());
-        // Product was created in setUp(), so createdAt should be in the past or now
         $now = new \DateTimeImmutable();
+
+        $this->assertInstanceOf(\DateTimeInterface::class, $this->product->getCreatedAt());
         $this->assertLessThanOrEqual($now, $this->product->getCreatedAt());
     }
 }

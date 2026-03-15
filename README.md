@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/YaroslavB/irish/actions/workflows/ci.yml/badge.svg)](https://github.com/YaroslavB/irish/actions/workflows/ci.yml)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/YaroslavB/irish/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/YaroslavB/irish/?branch=main)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=YaroslavB_irish&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=YaroslavB_irish)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=YaroslavB_irish&metric=coverage)](https://sonarcloud.io/summary/new_code?id=YaroslavB_irish)
 
 A Symfony-based web application.
 
