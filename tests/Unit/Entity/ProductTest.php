@@ -19,8 +19,8 @@ class ProductTest extends TestCase
 
     public function testNewProductHasDefaultValues(): void
     {
-        $this->assertFalse($this->product->isPublished());
-        $this->assertFalse($this->product->isDeleted());
+        $this->assertFalse($this->product->getIsPublished());
+        $this->assertFalse($this->product->getIsDeleted());
         $this->assertNotNull($this->product->getUuid());
         $this->assertNotNull($this->product->getCreatedAt());
         $this->assertEmpty($this->product->getProductImages());
