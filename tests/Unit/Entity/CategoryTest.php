@@ -17,7 +17,7 @@ class CategoryTest extends TestCase
 
     public function testNewCategoryHasDefaultValues(): void
     {
-        $this->assertFalse($this->category->isIsDeleted());
+        $this->assertFalse($this->category->isDeleted());
         $this->assertEmpty($this->category->getProducts());
     }
 
@@ -48,11 +48,11 @@ class CategoryTest extends TestCase
 
     public function testSetAndGetIsDeleted(): void
     {
-        $this->assertFalse($this->category->isIsDeleted());
-        
+        $this->assertFalse($this->category->isDeleted());
+
         $this->category->setIsDeleted(true);
         
-        $this->assertTrue($this->category->isIsDeleted());
+        $this->assertTrue($this->category->isDeleted());
     }
 
     public function testAddAndRemoveProduct(): void
