@@ -130,9 +130,9 @@ class ProductTest extends TestCase
 
     public function testCreatedAtIsSetOnConstruction(): void
     {
-        $now = new \DateTimeImmutable();
-        
         $this->assertInstanceOf(\DateTimeInterface::class, $this->product->getCreatedAt());
+        // Product was created in setUp(), so createdAt should be in the past or now
+        $now = new \DateTimeImmutable();
         $this->assertLessThanOrEqual($now, $this->product->getCreatedAt());
     }
 }

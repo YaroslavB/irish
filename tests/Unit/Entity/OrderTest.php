@@ -89,8 +89,8 @@ class OrderTest extends TestCase
 
     public function testCreatedAtAndUpdatedAtAreSetOnConstruction(): void
     {
-        $now = new \DateTimeImmutable();
         $order = new Order();
+        $now = new \DateTimeImmutable();
         
         $this->assertInstanceOf(\DateTimeImmutable::class, $order->getCreatedAt());
         $this->assertInstanceOf(\DateTimeImmutable::class, $order->getUpdatedAt());
