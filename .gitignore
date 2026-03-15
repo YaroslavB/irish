@@ -25,12 +25,12 @@ public/uploads
 
 docker/mysql
 /bin/*
-help.md
+docs/help.md
 .idea
 
 ###> SSH and Documentation ###
-SSH_SETUP.md
-PSALM_SETUP.md
+docs/SSH_SETUP.md
+docs/PSALM_SETUP.md
 *.pem
 *.key
 *.pub
