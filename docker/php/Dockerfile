@@ -1,5 +1,7 @@
 FROM php:8.1-fpm
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Install system dependencies, PHP extensions, Composer and Symfony CLI
 RUN apt-get update && apt-get install -y \
     zlib1g-dev \
@@ -25,6 +27,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install gd \
     && pecl install amqp \
     && docker-php-ext-enable amqp \
+    # Xdebug \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
     # Install Composer \
