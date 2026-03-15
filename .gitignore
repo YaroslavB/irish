@@ -27,3 +27,18 @@ docker/mysql
 /bin/*
 help.md
 .idea
+
+###> SSH and Documentation ###
+SSH_SETUP.md
+PSALM_SETUP.md
+*.pem
+*.key
+*.pub
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+id
+id.pub
+.ssh/
+###< SSH and Documentation ###
