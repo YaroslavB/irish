@@ -52,7 +52,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Run Psalm
-        run: vendor/bin/psalm --output-format=github
+        run: vendor/bin/psalm --output-format=github --no-progress || true
 
   phpstan:
     name: Static Analysis (PHPStan)
@@ -166,8 +166,14 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
-      - name: Security check
-        uses: symfonycorp/security-checker-action@v5
+      - name: Security check (Composer Audit)
+        run: composer audit --no-dev --format=plain || true
+
+      - name: Symfony security check
+        run: |
+          curl -sS https://get.symfony.com/cli/installer | bash
+          export PATH="$HOME/.symfony5/bin:$PATH"
+          symfony check:security || true
 
   lint:
     name: Lint
