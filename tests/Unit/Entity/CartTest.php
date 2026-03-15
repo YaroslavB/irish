@@ -71,11 +71,13 @@ class CartTest extends TestCase
 
     public function testCreatedAtIsSetOnConstruction(): void
     {
+        $before = new \DateTimeImmutable();
         $cart = new Cart();
-        $now = new \DateTimeImmutable();
+        $after = new \DateTimeImmutable();
         
         $this->assertInstanceOf(\DateTimeInterface::class, $cart->getCreatedAt());
-        $this->assertLessThanOrEqual($now, $cart->getCreatedAt());
+        $this->assertGreaterThanOrEqual($before, $cart->getCreatedAt());
+        $this->assertLessThanOrEqual($after, $cart->getCreatedAt());
     }
 }
 
