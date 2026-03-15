@@ -61,20 +61,20 @@ class ProductTest extends TestCase
 
     public function testSetAndGetIsPublished(): void
     {
-        $this->assertFalse($this->product->isPublished());
+        $this->assertFalse($this->product->getIsPublished());
 
         $this->product->setIsPublished(true);
         
-        $this->assertTrue($this->product->isPublished());
+        $this->assertTrue($this->product->getIsPublished());
     }
 
     public function testSetAndGetIsDeleted(): void
     {
-        $this->assertFalse($this->product->isDeleted());
+        $this->assertFalse($this->product->getIsDeleted());
 
         $this->product->setIsDeleted(true);
         
-        $this->assertTrue($this->product->isDeleted());
+        $this->assertTrue($this->product->getIsDeleted());
     }
 
     public function testSetAndGetCategory(): void
