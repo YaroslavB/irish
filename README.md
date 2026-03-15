@@ -8,7 +8,6 @@ A Symfony-based web application.
 
 - Docker & Docker Compose (v2.10+)
 - Git
-- WSL2 (for Windows users)
 
 ## Getting Started
 
@@ -84,23 +83,6 @@ docker compose exec php bin/console doctrine:fixtures:load
 ```
 
 ## Troubleshooting
-
-### SSH/Git Issues
-
-If you encounter SSH authentication issues when pushing to GitHub:
-```
-git@github.com: Permission denied (publickey).
-```
-
-See [SSH_SETUP.md](SSH_SETUP.md) for detailed instructions.
-
-### Quick SSH Fix (WSL)
-
-```bash
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id
-git push origin main
-```
 
 ## Project Structure
 
