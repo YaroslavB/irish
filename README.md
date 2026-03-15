@@ -1,6 +1,7 @@
 # Irish
 
 [![CI](https://github.com/YaroslavB/irish/actions/workflows/ci.yml/badge.svg)](https://github.com/YaroslavB/irish/actions/workflows/ci.yml)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/YaroslavB/irish/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/YaroslavB/irish/?branch=main)
 
 A Symfony-based web application.
 
