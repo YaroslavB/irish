@@ -10,6 +10,11 @@ when@dev:
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
                 channels: ["!event"]
+            logstash:
+                type: socket
+                connection_string: "logstash:5044"
+                level: debug
+                formatter: monolog.formatter.json
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:
@@ -50,6 +55,11 @@ when@prod:
                 type: stream
                 path: php://stderr
                 level: debug
+                formatter: monolog.formatter.json
+            logstash:
+                type: socket
+                connection_string: "logstash:5044"
+                level: warning
                 formatter: monolog.formatter.json
             console:
                 type: console
