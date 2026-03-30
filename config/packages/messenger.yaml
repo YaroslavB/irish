@@ -52,3 +52,11 @@ framework:
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
             # 'App\Message\ImportantMessage': async_priority_high
+
+when@test:
+    framework:
+        messenger:
+            transports:
+                async: 'in-memory://'
+                async_priority_high: 'in-memory://'
+                failed: 'in-memory://'
