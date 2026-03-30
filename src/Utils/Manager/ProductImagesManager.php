@@ -134,3 +134,4 @@ class ProductImagesManager extends AbstractManager
         return $this->entityManager->getRepository(ProductImage::class);
     }
 }
+
