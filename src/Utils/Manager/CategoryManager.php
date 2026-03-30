@@ -8,16 +8,13 @@ use Doctrine\Persistence\ObjectRepository;
 
 class CategoryManager extends AbstractManager
 {
-
     public function getRepository(): ObjectRepository
     {
         return $this->entityManager->getRepository(Category::class);
     }
 
     /**
-     * @param object $category
-     *
-     * @return void
+     * @param Category $category
      */
     public function remove(object $category): void
     {
@@ -29,7 +26,6 @@ class CategoryManager extends AbstractManager
         }
         $this->save($category);
     }
-
 
 }
 

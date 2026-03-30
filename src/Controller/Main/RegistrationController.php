@@ -35,24 +35,18 @@ class RegistrationController extends AbstractController
      */
     public function test(): Response
     {
-        //TODO Send email for test need  delete this
         $email = (new Email())
             ->from('hello@example.com')
             ->to('you@example.com')
-            //->cc('cc@example.com')
-            //->bcc('bcc@example.com')
-            //->replyTo('fabien@example.com')
-            //->priority(Email::PRIORITY_HIGH)
             ->subject('Time for Symfony Mailer!')
             ->text('Sending emails is fun again!')
             ->html('<p>See Twig integration for better HTML integration!</p>');
         try {
-            $transport = Transport::fromDsn(getenv('MAILER_DSN'));
+            $transport = Transport::fromDsn(getenv('MAILER_DSN') ?: '');
             $mailer = new Mailer($transport);
-            $info = $mailer->send($email);
+            $mailer->send($email);
         } catch (TransportExceptionInterface $e) {
-            echo $e->getMessage().PHP_EOL;
-            echo $e->getCode().PHP_EOL;
+            return new Response('Error: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return new Response('ok');

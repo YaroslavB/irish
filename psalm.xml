@@ -44,8 +44,6 @@
             <errorLevel type="suppress">
                 <directory name="src/Controller"/>
                 <directory name="src/Command"/>
-                <directory name="src/EventListener"/>
-                <directory name="src/EventSubscriber"/>
             </errorLevel>
         </PossiblyUnusedParam>
 
@@ -54,8 +52,6 @@
                 <directory name="src/Entity"/>
                 <directory name="src/Form"/>
                 <directory name="src/Command"/>
-                <directory name="src/EventListener"/>
-                <directory name="src/EventSubscriber"/>
             </errorLevel>
         </UnusedClass>
 
@@ -76,8 +72,7 @@
         <!-- ParamConverter can inject entities that may be null -->
         <PossiblyNullArgument>
             <errorLevel type="suppress">
-                <referencedMethod name="Symfony\Bundle\FrameworkBundle\Controller\AbstractController::render"/>
-                <referencedMethod name="Symfony\Bundle\FrameworkBundle\Controller\AbstractController::redirectToRoute"/>
+                <directory name="src/Controller"/>
             </errorLevel>
         </PossiblyNullArgument>
 
@@ -99,8 +94,6 @@
             <errorLevel type="suppress">
                 <directory name="src/Controller"/>
                 <directory name="src/Command"/>
-                <directory name="src/EventListener"/>
-                <directory name="src/EventSubscriber"/>
             </errorLevel>
         </PossiblyUnusedProperty>
 

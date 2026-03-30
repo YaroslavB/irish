@@ -7,24 +7,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class EditCategoryDto
 {
+    public ?int $id = null;
 
+    #[Assert\NotBlank(message: 'Title is required')]
+    public string $title = '';
 
-    /**
-     * @var string
-     */
-    public $id;
-
-    /**
-     * @Assert\NotBlank(message="Title is required")
-     * @var string
-     */
-    public string $title;
-
-    /**
-     * @param Category|null $category
-     *
-     * @return self
-     */
     public static function makeFromCategory(?Category $category): self
     {
         $dto = new self();
@@ -32,7 +19,7 @@ class EditCategoryDto
             return $dto;
         }
         $dto->id = $category->getId();
-        $dto->title = $category->getTitle();
+        $dto->title = $category->getTitle() ?? '';
 
         return $dto;
     }
