@@ -32,3 +32,4 @@ class CategoryManager extends AbstractManager
 
 
 }
+

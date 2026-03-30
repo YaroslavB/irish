@@ -89,3 +89,4 @@ class ProductManager extends AbstractManager
     }
 
 }
+
