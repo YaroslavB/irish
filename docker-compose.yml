@@ -11,18 +11,19 @@ services:
       - "host.docker.internal:host-gateway"
     build:
       context: ./docker/php
-    ports:
-      - '9003:9003'
-      - '9000:9000'
-      - '2525:2525'
+    expose:
+      - '9000'
+      - '9003'
     volumes:
       - ./:/var/www/irish
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./docker/php/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
       # xdebug
       - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     depends_on:
       - mysql
       - elasticsearch
+      - rabbitmq
     networks:
       - irish-network
 
@@ -124,9 +125,177 @@ services:
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       - xpack.security.enabled=false
+      - KIBANA_DEFAULTAPPID=discover
+      - NEWSFEED_ENABLED=false
+      - TELEMETRY_ENABLED=false
     ports:
       - "5601:5601"
     depends_on:
       - elasticsearch
     networks:
       - irish-network
+
+  rabbitmq:
+    container_name: rabbitmq_irish
+    image: rabbitmq:3.13-management-alpine
+    hostname: rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_VHOST: /
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+      - "15692:15692" # Prometheus metrics
+    volumes:
+      - ./docker/rabbitmq/data:/var/lib/rabbitmq
+      - ./docker/rabbitmq/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./docker/rabbitmq/config/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - irish-network
+
+  # ============================================
+  # MONITORING STACK - Prometheus & Grafana
+  # ============================================
+
+  prometheus:
+    container_name: prometheus_irish
+    image: prom/prometheus:v2.50.1
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./docker/prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - irish-network
+
+  grafana:
+    container_name: grafana_irish
+    image: grafana/grafana:10.3.3
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=http://localhost:3000
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-piechart-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - irish-network
+
+  # ============================================
+  # EXPORTERS
+  # ============================================
+
+  node-exporter:
+    container_name: node_exporter_irish
+    image: prom/node-exporter:v1.7.0
+    restart: unless-stopped
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    expose:
+      - "9100"
+    networks:
+      - irish-network
+
+  nginx-exporter:
+    container_name: nginx_exporter_irish
+    image: nginx/nginx-prometheus-exporter:1.1.0
+    restart: unless-stopped
+    command:
+      - '-nginx.scrape-uri=http://nginx:80/nginx_status'
+    expose:
+      - "9113"
+    depends_on:
+      - nginx
+    networks:
+      - irish-network
+
+  mysql-exporter:
+    container_name: mysql_exporter_irish
+    image: prom/mysqld-exporter:v0.15.1
+    restart: unless-stopped
+    environment:
+      - DATA_SOURCE_NAME=root:secret@(mysql:3306)/
+    expose:
+      - "9104"
+    depends_on:
+      - mysql
+    networks:
+      - irish-network
+
+  redis-exporter:
+    container_name: redis_exporter_irish
+    image: oliver006/redis_exporter:v1.57.0
+    restart: unless-stopped
+    environment:
+      - REDIS_ADDR=redis://redis:6379
+    expose:
+      - "9121"
+    depends_on:
+      - redis
+    networks:
+      - irish-network
+
+  php-fpm-exporter:
+    container_name: php_fpm_exporter_irish
+    image: hipages/php-fpm_exporter:2.2.0
+    restart: unless-stopped
+    environment:
+      - PHP_FPM_SCRAPE_URI=tcp://php:9000/status
+      - PHP_FPM_FIX_PROCESS_COUNT=true
+    expose:
+      - "9253"
+    depends_on:
+      - php
+    networks:
+      - irish-network
+
+  elasticsearch-exporter:
+    container_name: elasticsearch_exporter_irish
+    image: quay.io/prometheuscommunity/elasticsearch-exporter:v1.7.0
+    restart: unless-stopped
+    command:
+      - '--es.uri=http://elasticsearch:9200'
+      - '--es.all'
+      - '--es.indices'
+      - '--es.shards'
+    expose:
+      - "9114"
+    depends_on:
+      - elasticsearch
+    networks:
+      - irish-network
+
+volumes:
+  prometheus_data:
+  grafana_data:
+

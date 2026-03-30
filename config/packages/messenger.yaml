@@ -4,15 +4,44 @@ framework:
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
+            
+            # RabbitMQ транспорт (рекомендуется для production)
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
-                    use_notify: true
-                    check_delayed_interval: 60000
+                    # Имя exchange
+                    exchange:
+                        name: messages
+                        type: direct
+                    # Имя очереди
+                    queues:
+                        messages:
+                            binding_keys: [messages]
                 retry_strategy:
                     max_retries: 3
+                    delay: 1000
                     multiplier: 2
+                    max_delay: 60000
+            
+            # Высокоприоритетная очередь
+            async_priority_high:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: messages_high
+                        type: direct
+                    queues:
+                        messages_high:
+                            binding_keys: [high]
+                retry_strategy:
+                    max_retries: 5
+                    delay: 500
+                    multiplier: 2
+            
+            # Очередь для неудачных сообщений
             failed: 'doctrine://default?queue_name=failed'
+            
+            # Синхронный транспорт (для тестов)
             # sync: 'sync://'
 
         routing:
@@ -22,3 +51,4 @@ framework:
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
+            # 'App\Message\ImportantMessage': async_priority_high

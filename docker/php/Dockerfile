@@ -39,6 +39,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy PHP-FPM pool configuration for monitoring
+COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 
 WORKDIR /var/www/irish
 
