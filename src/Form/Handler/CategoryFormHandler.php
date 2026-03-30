@@ -8,7 +8,6 @@ use App\Utils\Manager\CategoryManager;
 
 class CategoryFormHandler
 {
-
     private CategoryManager $categoryManager;
 
     public function __construct(CategoryManager $categoryManager)
@@ -16,16 +15,15 @@ class CategoryFormHandler
         $this->categoryManager = $categoryManager;
     }
 
-    /**
-     * @param EditCategoryDto $editCategoryDto
-     *
-     * @return Category
-     */
     public function processEditForm(EditCategoryDto $editCategoryDto): Category
     {
         $category = new Category();
         if ($editCategoryDto->id) {
-            $category = $this->categoryManager->find($editCategoryDto->id);
+            /** @var Category|null $existingCategory */
+            $existingCategory = $this->categoryManager->find($editCategoryDto->id);
+            if ($existingCategory) {
+                $category = $existingCategory;
+            }
         }
         $category->setTitle($editCategoryDto->title);
         $this->categoryManager->save($category);

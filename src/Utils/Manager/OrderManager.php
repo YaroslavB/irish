@@ -60,26 +60,29 @@ class OrderManager extends AbstractManager
     }
 
 
-    private function createOrderFromCart(Cart $cart, User $user)
+    private function createOrderFromCart(Cart $cart, User $user): void
     {
         $order = new Order();
         $order->setOwner($user);
         $order->setStatus(OrderStaticStorage::ORDER_STATUS_CREATED);
-        $orderTotalPrice = 0;
+        $orderTotalPrice = 0.0;
+
         /** @var CartProduct $cartProduct */
         foreach ($cart->getCartProducts()->getValues() as $cartProduct) {
             $orderProduct = new OrderProduct();
             $orderProduct->setAppOrder($order);
             $orderProduct->setQuantity($cartProduct->getQuantity());
-            $orderProduct->setPricePerOne(
-                $cartProduct->getProduct()->getPrice()
-            );
+            $orderProduct->setPricePerOne($cartProduct->getProduct()->getPrice());
             $orderProduct->setProduct($cartProduct->getProduct());
-            $orderTotalPrice = $orderProduct->getQuantity()
-                * $orderProduct->getPricePerOne();
+
+            $quantity = (int) $orderProduct->getQuantity();
+            $pricePerOne = (float) $orderProduct->getPricePerOne();
+            $orderTotalPrice += $quantity * $pricePerOne;
+
             $order->addOrderProduct($orderProduct);
             $this->entityManager->persist($orderProduct);
         }
+
         $order->setTotalPrice($orderTotalPrice);
         $this->entityManager->persist($order);
         $this->entityManager->flush();

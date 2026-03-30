@@ -2,11 +2,11 @@
 
 namespace App\Security\Verifier;
 
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
@@ -16,11 +16,6 @@ class EmailVerifier
     private MailerInterface $mailer;
     private EntityManagerInterface $entityManager;
 
-    /**
-     * @param VerifyEmailHelperInterface $helper
-     * @param MailerInterface            $mailer
-     * @param EntityManagerInterface     $manager
-     */
     public function __construct(
         VerifyEmailHelperInterface $helper,
         MailerInterface $mailer,
@@ -33,23 +28,21 @@ class EmailVerifier
 
     public function sendEmailConfirmation(
         string $verifyEmailRouteName,
-        UserInterface $user,
+        User $user,
         TemplatedEmail $email
     ): void {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
-            $user->getId(),
+            (string) $user->getId(),
             $user->getEmail(),
             ['id' => $user->getId()]
         );
 
         $context = $email->getContext();
         $context['signedUrl'] = $signatureComponents->getSignedUrl();
-        $context['expiresAtMessageKey']
-            = $signatureComponents->getExpirationMessageKey();
-        $context['expiresAtMessageData']
-            = $signatureComponents->getExpirationMessageData();
-        //$transport = Transport::fromDsn('smtp://mailhog:1025');
+        $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
+        $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
+
         $email->context($context);
         $this->mailer->send($email);
     }
@@ -57,13 +50,11 @@ class EmailVerifier
     /**
      * @throws VerifyEmailExceptionInterface
      */
-    public function handleEmailConfirmation(
-        Request $request,
-        UserInterface $user
-    ): void {
+    public function handleEmailConfirmation(Request $request, User $user): void
+    {
         $this->verifyEmailHelper->validateEmailConfirmation(
             $request->getUri(),
-            $user->getId(),
+            (string) $user->getId(),
             $user->getEmail()
         );
 

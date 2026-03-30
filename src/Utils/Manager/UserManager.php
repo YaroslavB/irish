@@ -2,7 +2,6 @@
 
 namespace App\Utils\Manager;
 
-use App\Entity\Product;
 use App\Entity\User;
 use Doctrine\Persistence\ObjectRepository;
 

@@ -6,17 +6,13 @@ use App\Entity\Product;
 use App\Form\DTO\EditFormDto;
 use App\Utils\File\FileSaver;
 use App\Utils\Manager\ProductManager;
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 
 class ProductFormHandler
 {
-
     private FileSaver $fileSaver;
     private ProductManager $productManager;
 
-    /**
-     * ProductFormHandler constructor.
-     */
     public function __construct(
         ProductManager $productManager,
         FileSaver $fileSaver
@@ -25,15 +21,9 @@ class ProductFormHandler
         $this->productManager = $productManager;
     }
 
-    /**
-     * @param EditFormDto $editFormDto
-     * @param Form        $form
-     *
-     * @return Product
-     */
     public function processEditForm(
         EditFormDto $editFormDto,
-        Form $form
+        FormInterface $form
     ): Product {
         $product = new Product();
         if ($editFormDto->id) {
