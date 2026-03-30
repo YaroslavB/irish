@@ -137,3 +137,53 @@ docker compose exec php bin/console lint:yaml config
 docker compose exec php bin/console lint:twig templates
 ```
 
+## Monitoring
+
+This project includes a comprehensive monitoring stack with Prometheus and Grafana.
+
+### Available Monitoring Services
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Prometheus** | http://localhost:9090 | Metrics collection and storage |
+| **Grafana** | http://localhost:3000 | Metrics visualization (admin/admin) |
+| **Kibana** | http://localhost:5601 | Log viewing and search |
+
+### Monitored Components
+
+- **System**: CPU, memory, disk usage (Node Exporter)
+- **Nginx**: Request rates, connections, status codes
+- **PHP-FPM**: Active processes, connections, slow requests
+- **MySQL**: Connections, queries, slow queries
+- **Redis**: Memory, clients, operations
+- **RabbitMQ**: Queue messages, connections, message rates
+- **Elasticsearch**: Cluster health, storage, operations
+- **Symfony**: Application metrics at `/metrics` endpoint
+
+### Starting Monitoring Stack
+
+```bash
+# Start all services including monitoring
+docker compose up -d
+
+# Access Grafana
+# URL: http://localhost:3000
+# Username: admin
+# Password: admin
+```
+
+### Prometheus Targets
+
+All exporters are automatically configured as Prometheus targets:
+- Node Exporter: :9100
+- Nginx Exporter: :9113
+- MySQL Exporter: :9104
+- Redis Exporter: :9121
+- PHP-FPM Exporter: :9253
+- Elasticsearch Exporter: :9114
+- RabbitMQ: :15692
+
+### Custom Grafana Dashboards
+
+Pre-configured dashboards are automatically loaded:
+- **Irish Application Monitoring**: Complete system overview
