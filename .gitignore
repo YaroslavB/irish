@@ -43,6 +43,3 @@ id.pub
 .ssh/
 ###< SSH and Documentation ###
 
-# Claude Code
-.claude/
-CLAUDE.md
