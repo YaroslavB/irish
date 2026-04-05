@@ -11,11 +11,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\{HttpFoundation\Request,
     HttpFoundation\Response,
-    Mailer\Exception\TransportExceptionInterface,
-    Mailer\Mailer,
-    Mailer\Transport,
     Mime\Address,
-    Mime\Email,
     PasswordHasher\Hasher\UserPasswordHasherInterface,
     Routing\Annotation\Route};
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -28,28 +24,6 @@ class RegistrationController extends AbstractController
     public function __construct(EmailVerifier $emailVerifier)
     {
         $this->emailVerifier = $emailVerifier;
-    }
-
-    /**
-     * @Route("/test", name="test")
-     */
-    public function test(): Response
-    {
-        $email = (new Email())
-            ->from('hello@example.com')
-            ->to('you@example.com')
-            ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
-            ->html('<p>See Twig integration for better HTML integration!</p>');
-        try {
-            $transport = Transport::fromDsn(getenv('MAILER_DSN') ?: '');
-            $mailer = new Mailer($transport);
-            $mailer->send($email);
-        } catch (TransportExceptionInterface $e) {
-            return new Response('Error: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
-        return new Response('ok');
     }
 
     /**
