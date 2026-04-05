@@ -40,7 +40,7 @@ class EmailVerifierTest extends TestCase
         $user = $this->createMock(User::class);
         $user->method('getId')->willReturn(1);
         $user->method('getEmail')->willReturn('test@example.com');
-        
+
         $user->expects($this->once())
             ->method('setIsVerified')
             ->with(true);
