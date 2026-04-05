@@ -1,0 +1,34 @@
+<h1>Your Order Status Has Changed</h1>
+
+<p>Hi {{ order.owner.fullName ?: order.owner.email }},</p>
+
+<p>The status of your order <strong>#{{ order.id }}</strong> has been updated to: <strong>{{ statusLabel }}</strong></p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price each</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in order.orderProducts %}
+        <tr>
+            <td>{{ item.product.title }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.pricePerOne }}</td>
+            <td>{{ item.quantity * item.pricePerOne }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3"><strong>Total</strong></td>
+            <td><strong>{{ order.totalPrice }}</strong></td>
+        </tr>
+    </tfoot>
+</table>
+
+<p>Cheers!</p>
