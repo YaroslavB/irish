@@ -104,8 +104,8 @@ services:
     container_name: logstash_irish
     image: docker.elastic.co/logstash/logstash:8.12.0
     volumes:
-      - ./docker/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      - ./docker/logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+      - ./docker/logstash/config:/usr/share/logstash/config:ro
+      - ./docker/logstash/pipeline:/usr/share/logstash/pipeline:ro
       - ./var/log:/var/log/symfony:ro
     ports:
       - "5044:5044"
@@ -243,8 +243,10 @@ services:
     container_name: mysql_exporter_irish
     image: prom/mysqld-exporter:v0.15.1
     restart: unless-stopped
-    environment:
-      - DATA_SOURCE_NAME=root:secret@(mysql:3306)/
+    command:
+      - --config.my-cnf=/etc/mysqld-exporter/my.cnf
+    volumes:
+      - ./docker/mysql-exporter/my.cnf:/etc/mysqld-exporter/my.cnf:ro
     expose:
       - "9104"
     depends_on:
