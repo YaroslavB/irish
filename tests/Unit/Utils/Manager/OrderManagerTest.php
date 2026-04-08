@@ -109,8 +109,15 @@ class OrderManagerTest extends TestCase
             ->with(['sessionId' => 'abc'])
             ->willReturn($cart);
 
-        $order = new Order();
-        $this->entityManager->method('persist');
+        $this->entityManager
+            ->method('persist')
+            ->willReturnCallback(function (object $entity): void {
+                if ($entity instanceof Order) {
+                    $reflection = new \ReflectionProperty(Order::class, 'id');
+                    $reflection->setAccessible(true);
+                    $reflection->setValue($entity, 1);
+                }
+            });
         $this->entityManager->method('flush');
 
         $this->bus

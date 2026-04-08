@@ -35,6 +35,9 @@ class EmailVerifierTest extends TestCase
     }
 
 
+    /**
+     * @group legacy
+     */
     public function testHandleEmailConfirmation(): void
     {
         $user = $this->createMock(User::class);
