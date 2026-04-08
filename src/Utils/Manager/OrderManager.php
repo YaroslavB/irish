@@ -8,19 +8,24 @@ use App\Entity\Order;
 use App\Entity\OrderProduct;
 use App\Entity\StaticStorage\OrderStaticStorage;
 use App\Entity\User;
+use App\Message\SendOrderConfirmationEmail;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class OrderManager extends AbstractManager
 {
     private CartManager $cartManager;
+    private MessageBusInterface $bus;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        CartManager $cartManager
+        CartManager $cartManager,
+        MessageBusInterface $bus
     ) {
         parent::__construct($entityManager);
         $this->cartManager = $cartManager;
+        $this->bus = $bus;
     }
 
     public function getRepository(): ObjectRepository
@@ -87,6 +92,8 @@ class OrderManager extends AbstractManager
         $this->entityManager->persist($order);
         $this->entityManager->flush();
         $this->cartManager->remove($cart);
+
+        $this->bus->dispatch(new SendOrderConfirmationEmail($order->getId()));
     }
 
     /**

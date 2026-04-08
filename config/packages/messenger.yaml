@@ -4,16 +4,13 @@ framework:
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
-            
-            # RabbitMQ транспорт (рекомендуется для production)
+
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
-                    # Имя exchange
                     exchange:
                         name: messages
                         type: direct
-                    # Имя очереди
                     queues:
                         messages:
                             binding_keys: [messages]
@@ -22,8 +19,7 @@ framework:
                     delay: 1000
                     multiplier: 2
                     max_delay: 60000
-            
-            # Высокоприоритетная очередь
+
             async_priority_high:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
@@ -37,21 +33,33 @@ framework:
                     max_retries: 5
                     delay: 500
                     multiplier: 2
-            
-            # Очередь для неудачных сообщений
+
+            emails:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: emails
+                        type: direct
+                    queues:
+                        emails:
+                            binding_keys: [emails]
+                retry_strategy:
+                    max_retries: 5
+                    delay: 2000
+                    multiplier: 2
+                    max_delay: 120000
+
             failed: 'doctrine://default?queue_name=failed'
             
             # Синхронный транспорт (для тестов)
             # sync: 'sync://'
 
         routing:
-            Symfony\Component\Mailer\Messenger\SendEmailMessage: async
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: emails
             Symfony\Component\Notifier\Message\ChatMessage: async
             Symfony\Component\Notifier\Message\SmsMessage: async
-
-            # Route your messages to the transports
-            # 'App\Message\YourMessage': async
-            # 'App\Message\ImportantMessage': async_priority_high
+            App\Message\SendOrderConfirmationEmail: emails
+            App\Message\SendOrderStatusChangedEmail: emails
 
 when@test:
     framework:
@@ -59,4 +67,5 @@ when@test:
             transports:
                 async: 'in-memory://'
                 async_priority_high: 'in-memory://'
+                emails: 'in-memory://'
                 failed: 'in-memory://'
