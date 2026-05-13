@@ -105,6 +105,11 @@ class ChatServerCommand extends Command
                 }
             }
 
+            // Snapshot before processing pending: sockets promoted to $clients this
+            // cycle must not be iterated as clients until the next cycle (their
+            // readable data was already consumed by handlePending).
+            $clientIdsThisCycle = array_keys($clients);
+
             foreach ($pending as $id => $socket) {
                 if (!in_array($socket, $read, true)) {
                     continue;
@@ -112,7 +117,11 @@ class ChatServerCommand extends Command
                 $this->handlePending($id, $socket, $pending, $clients, $nicknames, $io);
             }
 
-            foreach ($clients as $id => $socket) {
+            foreach ($clientIdsThisCycle as $id) {
+                if (!isset($clients[$id])) {
+                    continue;
+                }
+                $socket = $clients[$id];
                 if (!in_array($socket, $read, true)) {
                     continue;
                 }
@@ -138,6 +147,9 @@ class ChatServerCommand extends Command
         $line = fgets($socket, 4096);
 
         if ($line === false || $line === '') {
+            if ($line === false && !feof($socket)) {
+                return; // EAGAIN — no data yet, not a real disconnect
+            }
             fclose($socket);
             unset($pending[$id]);
 
@@ -186,6 +198,9 @@ class ChatServerCommand extends Command
         $line = fgets($socket, 4096);
 
         if ($line === false || $line === '') {
+            if ($line === false && !feof($socket)) {
+                return; // EAGAIN — no data yet, not a real disconnect
+            }
             $nick = $nicknames[$id] ?? 'unknown';
             fclose($socket);
             unset($clients[$id], $nicknames[$id]);
