@@ -18,7 +18,7 @@ class CategoryFormHandler
     public function processEditForm(EditCategoryDto $editCategoryDto): Category
     {
         $category = new Category();
-        if ($editCategoryDto->id) {
+        if ($editCategoryDto->id !== null) {
             /** @var Category|null $existingCategory */
             $existingCategory = $this->categoryManager->find($editCategoryDto->id);
             if ($existingCategory) {

@@ -22,7 +22,7 @@ class UserFormHandler
     {
         /** @var User $user */
         $user = $form->getData();
-        if ($form->has('newEmail') && !$user->getId()) {
+        if ($form->has('newEmail') && $user->getId() === null) {
             $user->setEmail($form->get('newEmail')->getData());
         }
         if ($form->has('planePassword')) {

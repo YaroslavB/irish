@@ -56,7 +56,7 @@ class FileSaver
             '%s-%s.%s',
             $safeFileName,
             uniqid('', false),
-            $uploadFile->guessExtension()
+            (string) $uploadFile->guessExtension()
         );
 
         // check if folder exist before upload file

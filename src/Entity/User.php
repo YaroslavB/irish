@@ -61,9 +61,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $address = null;
 
     /**
+     * The column is an integer, but the getter/setter expose it as a string,
+     * so use a docblock type (no native type) to keep both Psalm and the
+     * Doctrine mapping validator satisfied.
+     *
+     * @var string|null
      * @ORM\Column(type="integer", nullable=true)
      */
-    private ?string $zipcode = null;
+    private $zipcode = null;
 
     /**
      * @ORM\Column(type="boolean")

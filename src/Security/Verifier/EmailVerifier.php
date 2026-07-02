@@ -52,8 +52,14 @@ class EmailVerifier
      */
     public function handleEmailConfirmation(Request $request, User $user): void
     {
-        $this->verifyEmailHelper->validateEmailConfirmationFromRequest(
-            $request,
+        /**
+         * validateEmailConfirmationFromRequest() is a magic @method that PHPUnit
+         * cannot mock, so we keep the interface method and suppress its deprecation.
+         *
+         * @psalm-suppress DeprecatedMethod
+         */
+        $this->verifyEmailHelper->validateEmailConfirmation(
+            $request->getUri(),
             (string) $user->getId(),
             (string) $user->getEmail()
         );
