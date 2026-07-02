@@ -21,7 +21,7 @@ jobs:
           tools: php-cs-fixer
 
       - name: Check code style
-        run: php-cs-fixer fix --dry-run --diff --allow-risky=yes || true
+        run: php-cs-fixer fix --dry-run --diff --allow-risky=yes
 
   psalm:
     name: Static Analysis (Psalm)
@@ -52,7 +52,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Run Psalm
-        run: vendor/bin/psalm --output-format=github --no-progress || true
+        run: vendor/bin/psalm --output-format=github --no-progress
 
   phpstan:
     name: Static Analysis (PHPStan)
@@ -83,7 +83,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse src --level=5 --no-progress || true
+        run: vendor/bin/phpstan analyse src --level=5 --no-progress
 
   tests:
     name: PHPUnit Tests
@@ -167,13 +167,13 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Security check (Composer Audit)
-        run: composer audit --no-dev --format=plain || true
+        run: composer audit --no-dev --format=plain
 
       - name: Symfony security check
         run: |
           curl -sS https://get.symfony.com/cli/installer | bash
           export PATH="$HOME/.symfony5/bin:$PATH"
-          symfony check:security || true
+          symfony check:security
 
   lint:
     name: Lint
@@ -212,7 +212,7 @@ jobs:
         run: php bin/console lint:container
 
       - name: Check Doctrine schema
-        run: php bin/console doctrine:schema:validate --skip-sync || true
+        run: php bin/console doctrine:schema:validate --skip-sync
 
   sonarcloud:
     name: SonarCloud Analysis
