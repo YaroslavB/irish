@@ -61,7 +61,7 @@ class ImageResizer
             $targetFilePath
         );
 
-        return $targetFileName;
+        return (string) $targetFileName;
     }
 
 

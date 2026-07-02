@@ -44,8 +44,8 @@ class EditOrderFormType extends AbstractType
                 'choice_label' => function (User $user) {
                     return sprintf(
                         '#%s %s',
-                        $user->getId(),
-                        $user->getEmail()
+                        (int) $user->getId(),
+                        (string) $user->getEmail()
                     );
                 },
                 'label'        => 'User',

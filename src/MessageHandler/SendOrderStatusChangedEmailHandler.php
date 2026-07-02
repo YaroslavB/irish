@@ -24,19 +24,22 @@ class SendOrderStatusChangedEmailHandler
     {
         $order = $this->orderRepository->find($message->getOrderId());
 
-        if ($order === null || $order->getOwner() === null) {
+        if ($order === null) {
+            return;
+        }
+
+        $user = $order->getOwner();
+        if ($user === null) {
             return;
         }
 
         $statusList = OrderStaticStorage::getOrderStatusList();
         $statusLabel = $statusList[$message->getNewStatus()] ?? 'Unknown';
 
-        $user = $order->getOwner();
-
         $email = (new TemplatedEmail())
             ->from(new Address($this->mailerFrom, 'Irish Shop'))
-            ->to($user->getEmail())
-            ->subject(sprintf('Order #%d status updated: %s', $order->getId(), $statusLabel))
+            ->to((string) $user->getEmail())
+            ->subject(sprintf('Order #%d status updated: %s', (int) $order->getId(), $statusLabel))
             ->htmlTemplate('email/order/status_changed.html.twig')
             ->context([
                 'order' => $order,

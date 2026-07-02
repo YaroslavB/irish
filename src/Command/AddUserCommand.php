@@ -110,7 +110,7 @@ class AddUserCommand extends Command
 
         $stopwatchMassage = sprintf(
             'New  user id %s . Elapsed time: %.2f ms/memory %.2f MB',
-            $user->getId(),
+            (int) $user->getId(),
             $eventData->getDuration(),
             $eventData->getMemory() / 1000 / 1000
         );

@@ -28,16 +28,14 @@ class ProductManager extends AbstractManager
 
     public function getProductImagesDir(Product $product): string
     {
-        return sprintf('%s/%s', $this->productImagesDir, $product->getId());
+        return sprintf('%s/%s', $this->productImagesDir, (int) $product->getId());
     }
 
-    /**
-     * @param Product $product
-     */
-    public function remove(object $product): void
+    public function remove(object $entity): void
     {
-        $product->setIsDeleted(true);
-        $this->save($product);
+        /** @var Product $entity */
+        $entity->setIsDeleted(true);
+        $this->save($entity);
     }
 
     public function updateProductImages(

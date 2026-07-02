@@ -11,9 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProfileController extends AbstractController
 {
-    /**
-     * @Route("/profile", name="app_profile")
-     */
+    #[Route(path: '/profile', name: 'app_profile')]
     public function index(): Response
     {
         return $this->render(
@@ -26,10 +24,10 @@ class ProfileController extends AbstractController
     /**
      * @param  Request  $request
      * @param  EntityManagerInterface  $entityManager
-     * @Route("/profile/edit", name="app_profile_edit")
      *
      * @return Response
      */
+    #[Route(path: '/profile/edit', name: 'app_profile_edit')]
     public function edit(
         Request $request,
         EntityManagerInterface $entityManager

@@ -12,8 +12,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -21,58 +21,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $email;
+    private ?string $email = null;
 
     /**
+     * @var string[]
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private $password;
+    private string $password;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isVerified = false;
+    private bool $isVerified = false;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $fullName;
+    private ?string $fullName = null;
 
     /**
      * @ORM\Column(type="string", length=30, nullable=true)
      */
-    private $phone;
+    private ?string $phone = null;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $address;
+    private ?string $address = null;
 
     /**
+     * The column is an integer, but the getter/setter expose it as a string,
+     * so use a docblock type (no native type) to keep both Psalm and the
+     * Doctrine mapping validator satisfied.
+     *
+     * @var string|null
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $zipcode;
+    private $zipcode = null;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isDeleted;
+    private ?bool $isDeleted = null;
 
     /**
+     * @var Collection<int, Order>
      * @ORM\OneToMany(targetEntity=Order::class, mappedBy="owner")
      */
-    private $orders;
+    private Collection $orders;
 
     /**
      * User constructor.
@@ -169,7 +176,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;

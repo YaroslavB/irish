@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +33,7 @@ class MetricsController extends AbstractController
         try {
             $this->entityManager->getConnection()->executeQuery('SELECT 1');
             $metrics[] = 'symfony_database_connected 1';
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $metrics[] = 'symfony_database_connected 0';
         }
         

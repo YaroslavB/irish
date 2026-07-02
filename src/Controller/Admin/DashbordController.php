@@ -8,17 +8,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-/**
- *
- * @Route("/admin")
- */
+
+#[Route(path: '/admin')]
 class DashbordController extends AbstractController
 {
 
     /**
-     * @Route("/dashboard", name="admin_dashboard")
      * @return Response
      */
+    #[Route(path: '/dashboard', name: 'admin_dashboard')]
     public function dashboard(): Response
     {
         return $this->render('admin/pages/dashboard.html.twig');

@@ -26,11 +26,14 @@ class ProductFormHandler
         FormInterface $form
     ): Product {
         $product = new Product();
-        if ($editFormDto->id) {
-            $product = $this->productManager->find($editFormDto->id);
+        if ($editFormDto->id !== null) {
+            $found = $this->productManager->find($editFormDto->id);
+            if ($found instanceof Product) {
+                $product = $found;
+            }
         }
         $product->setTitle($editFormDto->title);
-        $product->setPrice($editFormDto->price);
+        $product->setPrice((string) $editFormDto->price);
         $product->setQuantity($editFormDto->quantity);
         $product->setDescription($editFormDto->description);
         $product->setCategory($editFormDto->category);

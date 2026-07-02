@@ -18,29 +18,30 @@ class Category
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      *
      * @ORM\Column(type="string", length=100)
      */
-    private $title;
+    private ?string $title = null;
 
     /**
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=120, unique=true)
      */
-    private $slug;
+    private ?string $slug = null;
 
     /**
+     * @var Collection<int, Product>
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="category")
      */
-    private $products;
+    private Collection $products;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $isDeleted;
+    private ?bool $isDeleted = null;
 
     public function __construct()
     {

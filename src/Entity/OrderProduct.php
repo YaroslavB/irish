@@ -15,29 +15,29 @@ class OrderProduct
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="orderProducts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $appOrder;
+    private ?Order $appOrder = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="orderProducts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $product;
+    private ?Product $product = null;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $quantity;
+    private ?int $quantity = null;
 
     /**
      * @ORM\Column(type="decimal", precision=6, scale=2)
      */
-    private $pricePerOne;
+    private ?string $pricePerOne = null;
 
     public function getId(): ?int
     {

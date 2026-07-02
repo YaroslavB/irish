@@ -23,6 +23,7 @@ class EmailVerifierTest extends TestCase
 
     protected function setUp(): void
     {
+
         $this->verifyEmailHelper = $this->createMock(VerifyEmailHelperInterface::class);
         $this->mailer = $this->createMock(MailerInterface::class);
         $this->entityManager = $this->createMock(EntityManagerInterface::class);
@@ -61,5 +62,9 @@ class EmailVerifierTest extends TestCase
 
         $this->emailVerifier->handleEmailConfirmation($request, $user);
     }
+
 }
+
+
+
 

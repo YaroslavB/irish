@@ -50,7 +50,7 @@ framework:
                     max_delay: 120000
 
             failed: 'doctrine://default?queue_name=failed'
-            
+
             # Синхронный транспорт (для тестов)
             # sync: 'sync://'
 
@@ -60,6 +60,7 @@ framework:
             Symfony\Component\Notifier\Message\SmsMessage: async
             App\Message\SendOrderConfirmationEmail: emails
             App\Message\SendOrderStatusChangedEmail: emails
+            App\Message\ProcessProductImages: async
 
 when@test:
     framework:

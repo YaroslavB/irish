@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,78 +21,81 @@ class Product
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(type="uuid")
      */
-    private $uuid;
+    private ?Uuid $uuid = null;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $title;
+    private ?string $title = null;
 
     /**
      * @ORM\Column(type="decimal", precision=6, scale=2)
      */
-    private $price;
+    private ?string $price = null;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $quantity;
+    private ?int $quantity = null;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private ?DateTimeInterface $createdAt = null;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
+    private ?string $description = null;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isPublished;
+    private ?bool $isPublished = null;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isDeleted;
+    private ?bool $isDeleted = null;
 
     /**
+     * @var Collection<int, ProductImage>
      * @ORM\OneToMany(targetEntity=ProductImage::class, mappedBy="product", cascade={"persist"}, orphanRemoval=true)
      */
-    private $productImages;
+    private Collection $productImages;
 
     /**
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=128, unique=true, nullable=true)
      */
-    private $slug;
+    private ?string $slug = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
      */
-    private $category;
+    private ?Category $category = null;
 
     /**
+     * @var Collection<int, CartProduct>
      * @ORM\OneToMany(targetEntity=CartProduct::class, mappedBy="product", orphanRemoval=true)
      */
-    private $cartProducts;
+    private Collection $cartProducts;
 
     /**
+     * @var Collection<int, OrderProduct>
      * @ORM\OneToMany(targetEntity=OrderProduct::class, mappedBy="product")
      */
-    private $orderProducts;
+    private Collection $orderProducts;
 
     public function __construct()
     {
         $this->uuid = Uuid::v4();
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
         $this->isPublished = false;
         $this->isDeleted = false;
         $this->productImages = new ArrayCollection();
@@ -105,7 +110,7 @@ class Product
 
     public function getUuid(): ?string
     {
-        return $this->uuid;
+        return $this->uuid?->__toString();
     }
 
     public function getTitle(): ?string
@@ -144,12 +149,12 @@ class Product
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -193,7 +198,7 @@ class Product
     }
 
     /**
-     * @return Collection|ProductImage[]
+     * @return Collection<int, ProductImage>
      */
     public function getProductImages(): Collection
     {
@@ -247,7 +252,7 @@ class Product
     }
 
     /**
-     * @return Collection|CartProduct[]
+     * @return Collection<int, CartProduct>
      */
     public function getCartProducts(): Collection
     {

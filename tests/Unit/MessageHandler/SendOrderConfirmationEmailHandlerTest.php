@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\MessageHandler;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Order;
 use App\Entity\User;
 use App\Message\SendOrderConfirmationEmail;
@@ -40,7 +41,7 @@ class SendOrderConfirmationEmailHandlerTest extends TestCase
         $order = $this->createMock(Order::class);
         $order->method('getId')->willReturn(42);
         $order->method('getOwner')->willReturn($user);
-        $order->method('getOrderProducts')->willReturn(new \Doctrine\Common\Collections\ArrayCollection());
+        $order->method('getOrderProducts')->willReturn(new ArrayCollection());
         $order->method('getTotalPrice')->willReturn(99.99);
 
         $this->orderRepository

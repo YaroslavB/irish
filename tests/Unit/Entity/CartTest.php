@@ -2,6 +2,8 @@
 
 namespace App\Tests\Unit\Entity;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use App\Entity\Cart;
 use App\Entity\CartProduct;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +33,7 @@ class CartTest extends TestCase
 
     public function testSetAndGetCreatedAt(): void
     {
-        $date = new \DateTimeImmutable('2024-01-01 12:00:00');
+        $date = new DateTimeImmutable('2024-01-01 12:00:00');
         $this->cart->setCreatedAt($date);
         
         $this->assertSame($date, $this->cart->getCreatedAt());
@@ -71,11 +73,11 @@ class CartTest extends TestCase
 
     public function testCreatedAtIsSetOnConstruction(): void
     {
-        $before = new \DateTimeImmutable();
+        $before = new DateTimeImmutable();
         $cart = new Cart();
-        $after = new \DateTimeImmutable();
+        $after = new DateTimeImmutable();
         
-        $this->assertInstanceOf(\DateTimeInterface::class, $cart->getCreatedAt());
+        $this->assertInstanceOf(DateTimeInterface::class, $cart->getCreatedAt());
         $this->assertGreaterThanOrEqual($before, $cart->getCreatedAt());
         $this->assertLessThanOrEqual($after, $cart->getCreatedAt());
     }

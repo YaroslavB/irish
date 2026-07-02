@@ -90,7 +90,9 @@ class ProductImagesManager extends AbstractManager
         $this->fileSystem->remove($bigFilePath);
 
         $product = $productImage->getProduct();
-        $product->removeProductImage($productImage);
+        if ($product !== null) {
+            $product->removeProductImage($productImage);
+        }
         $this->entityManager->flush();
     }
 

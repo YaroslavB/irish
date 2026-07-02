@@ -34,7 +34,7 @@ class EmailVerifier
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
             (string) $user->getId(),
-            $user->getEmail(),
+            (string) $user->getEmail(),
             ['id' => $user->getId()]
         );
 
@@ -52,10 +52,16 @@ class EmailVerifier
      */
     public function handleEmailConfirmation(Request $request, User $user): void
     {
+        /**
+         * validateEmailConfirmationFromRequest() is a magic @method that PHPUnit
+         * cannot mock, so we keep the interface method and suppress its deprecation.
+         *
+         * @psalm-suppress DeprecatedMethod
+         */
         $this->verifyEmailHelper->validateEmailConfirmation(
             $request->getUri(),
             (string) $user->getId(),
-            $user->getEmail()
+            (string) $user->getEmail()
         );
 
         $user->setIsVerified(true);

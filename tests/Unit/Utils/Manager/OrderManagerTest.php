@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Utils\Manager;
 
+use DateTimeImmutable;
+use App\Entity\User;
+use App\Entity\Cart;
+use Doctrine\Common\Collections\ArrayCollection;
+use ReflectionProperty;
 use App\Entity\Order;
 use App\Message\SendOrderConfirmationEmail;
 use App\Utils\Manager\CartManager;
@@ -55,7 +60,7 @@ class OrderManagerTest extends TestCase
 
         $order->expects($this->once())
             ->method('setUpdatedAt')
-            ->with($this->isInstanceOf(\DateTimeImmutable::class));
+            ->with($this->isInstanceOf(DateTimeImmutable::class));
 
         $this->entityManager->expects($this->once())->method('persist')->with($order);
         $this->entityManager->expects($this->once())->method('flush');
@@ -76,7 +81,7 @@ class OrderManagerTest extends TestCase
             ->with(['sessionId' => 'session123'])
             ->willReturn(null);
 
-        $user = $this->createMock(\App\Entity\User::class);
+        $user = $this->createMock(User::class);
         $result = $this->orderManager->createOrderFromCartFromSession('session123', $user);
 
         $this->assertNull($result);
@@ -88,7 +93,7 @@ class OrderManagerTest extends TestCase
 
         $order->expects($this->once())
             ->method('setUpdatedAt')
-            ->with($this->isInstanceOf(\DateTimeImmutable::class));
+            ->with($this->isInstanceOf(DateTimeImmutable::class));
 
         $this->entityManager->expects($this->once())->method('persist')->with($order);
         $this->entityManager->expects($this->once())->method('flush');
@@ -101,8 +106,8 @@ class OrderManagerTest extends TestCase
         $cartRepository = $this->createMock(ObjectRepository::class);
         $this->cartManager->method('getRepository')->willReturn($cartRepository);
 
-        $cart = $this->createMock(\App\Entity\Cart::class);
-        $cart->method('getCartProducts')->willReturn(new \Doctrine\Common\Collections\ArrayCollection());
+        $cart = $this->createMock(Cart::class);
+        $cart->method('getCartProducts')->willReturn(new ArrayCollection());
 
         $cartRepository
             ->method('findOneBy')
@@ -113,7 +118,7 @@ class OrderManagerTest extends TestCase
             ->method('persist')
             ->willReturnCallback(function (object $entity): void {
                 if ($entity instanceof Order) {
-                    $reflection = new \ReflectionProperty(Order::class, 'id');
+                    $reflection = new ReflectionProperty(Order::class, 'id');
                     $reflection->setAccessible(true);
                     $reflection->setValue($entity, 1);
                 }
@@ -126,7 +131,7 @@ class OrderManagerTest extends TestCase
             ->with($this->isInstanceOf(SendOrderConfirmationEmail::class))
             ->willReturn(new Envelope(new SendOrderConfirmationEmail(0)));
 
-        $user = $this->createMock(\App\Entity\User::class);
+        $user = $this->createMock(User::class);
         $this->orderManager->createOrderFromCartFromSession('abc', $user);
     }
 }

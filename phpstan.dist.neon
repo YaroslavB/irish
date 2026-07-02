@@ -1,0 +1,7 @@
+parameters:
+    ignoreErrors:
+        # Doctrine hydrates entity identifiers via reflection, so PHPStan cannot see
+        # the write and reports the mapped $id as "never written, only read".
+        -
+            message: '#Property App\\Entity\\.+::\$id is never written, only read\.#'
+            path: src/Entity

@@ -16,15 +16,11 @@ class UserManager extends AbstractManager
         return $this->entityManager->getRepository(User::class);
     }
 
-    /**
-     * @param User $user
-     *
-     * @return void
-     */
-    public function remove(object $user): void
+    public function remove(object $entity): void
     {
-        $user->setIsDeleted(true);
-        $this->save($user);
+        /** @var User $entity */
+        $entity->setIsDeleted(true);
+        $this->save($entity);
     }
 
 }

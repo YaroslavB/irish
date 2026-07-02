@@ -23,16 +23,19 @@ class SendOrderConfirmationEmailHandler
     {
         $order = $this->orderRepository->find($message->getOrderId());
 
-        if ($order === null || $order->getOwner() === null) {
+        if ($order === null) {
             return;
         }
 
         $user = $order->getOwner();
+        if ($user === null) {
+            return;
+        }
 
         $email = (new TemplatedEmail())
             ->from(new Address($this->mailerFrom, 'Irish Shop'))
-            ->to($user->getEmail())
-            ->subject(sprintf('Order #%d confirmed', $order->getId()))
+            ->to((string) $user->getEmail())
+            ->subject(sprintf('Order #%d confirmed', (int) $order->getId()))
             ->htmlTemplate('email/order/confirmation.html.twig')
             ->context(['order' => $order]);
 

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\Tests\Unit\Controller\Main;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use App\Controller\Main\CartController;
 use App\Entity\Cart;
 use App\Entity\User;
@@ -20,7 +21,7 @@ class CartControllerTest extends TestCase
             ->with(['sessionId' => 'test_session'])
             ->willReturn($cart);
         $request = $this->createMock(Request::class);
-        $request->cookies = new \Symfony\Component\HttpFoundation\ParameterBag(['PHPSESSID' => 'test_session']);
+        $request->cookies = new ParameterBag(['PHPSESSID' => 'test_session']);
         $controller = $this->getMockBuilder(CartController::class)
             ->onlyMethods(['render'])
             ->getMock();
@@ -35,7 +36,7 @@ class CartControllerTest extends TestCase
         $cartRepository = $this->createMock(CartRepository::class);
         $cartRepository->method('findOneBy')->willReturn(null);
         $request = $this->createMock(Request::class);
-        $request->cookies = new \Symfony\Component\HttpFoundation\ParameterBag(['PHPSESSID' => 'no_cart']);
+        $request->cookies = new ParameterBag(['PHPSESSID' => 'no_cart']);
         $controller = $this->getMockBuilder(CartController::class)
             ->onlyMethods(['render'])
             ->getMock();

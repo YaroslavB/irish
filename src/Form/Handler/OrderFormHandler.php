@@ -33,7 +33,7 @@ class OrderFormHandler
         $this->orderManager->save($order);
 
         if ($oldStatus !== null && $oldStatus !== $newStatus) {
-            $this->bus->dispatch(new SendOrderStatusChangedEmail($order->getId(), $newStatus));
+            $this->bus->dispatch(new SendOrderStatusChangedEmail((int) $order->getId(), (int) $newStatus));
         }
 
         return $order;

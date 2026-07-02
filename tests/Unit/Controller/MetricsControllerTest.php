@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Controller;
 
+use Exception;
 use App\Controller\MetricsController;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,7 +40,7 @@ class MetricsControllerTest extends TestCase
         $response = $this->controller->metrics();
 
         $this->assertInstanceOf(Response::class, $response);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertEquals('text/plain; charset=utf-8', $response->headers->get('Content-Type'));
     }
 
@@ -72,7 +73,7 @@ class MetricsControllerTest extends TestCase
     {
         $this->connection
             ->method('executeQuery')
-            ->willThrowException(new \Exception('Connection failed'));
+            ->willThrowException(new Exception('Connection failed'));
 
         $response = $this->controller->metrics();
         $content = $response->getContent();

@@ -15,7 +15,7 @@ class ProductImage
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="productImages")
