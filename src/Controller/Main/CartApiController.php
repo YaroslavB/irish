@@ -28,7 +28,7 @@ class CartApiController extends AbstractController
         $productUuid = $request->request->get('productId');
         $sessionId = $request->cookies->get('PHPSESSID');
 
-        if (!$sessionId) {
+        if (!is_string($sessionId) || $sessionId === '') {
             return new JsonResponse(
                 ['status' => false, 'error' => 'Session not found'],
                 Response::HTTP_BAD_REQUEST

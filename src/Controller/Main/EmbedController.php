@@ -14,7 +14,7 @@ class EmbedController extends AbstractController
         int $categoryId = null
     ): Response {
         $params = [];
-        if ($categoryId) {
+        if ($categoryId !== null) {
             $params['category'] = $categoryId;
         }
         $products = $productRepository->findBy(

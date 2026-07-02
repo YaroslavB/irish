@@ -34,15 +34,11 @@ class OrderManager extends AbstractManager
         return $this->entityManager->getRepository(Order::class);
     }
 
-    /**
-     * @param object $order
-     *
-     * @return void
-     */
-    public function remove(object $order): void
+    public function remove(object $entity): void
     {
-        $order->setIsDeleted(true);
-        $this->save($order);
+        /** @var Order $entity */
+        $entity->setIsDeleted(true);
+        $this->save($entity);
     }
 
     /**
@@ -58,7 +54,7 @@ class OrderManager extends AbstractManager
         $cart = $this->cartManager->getRepository()->findOneBy(
             ['sessionId' => $sessionId]
         );
-        if ($cart) {
+        if ($cart instanceof Cart) {
             $this->createOrderFromCart($cart, $user);
         }
 
@@ -75,11 +71,16 @@ class OrderManager extends AbstractManager
 
         /** @var CartProduct $cartProduct */
         foreach ($cart->getCartProducts()->getValues() as $cartProduct) {
+            $product = $cartProduct->getProduct();
+            if ($product === null) {
+                continue;
+            }
+
             $orderProduct = new OrderProduct();
             $orderProduct->setAppOrder($order);
-            $orderProduct->setQuantity($cartProduct->getQuantity());
-            $orderProduct->setPricePerOne($cartProduct->getProduct()->getPrice());
-            $orderProduct->setProduct($cartProduct->getProduct());
+            $orderProduct->setQuantity((int) $cartProduct->getQuantity());
+            $orderProduct->setPricePerOne((string) $product->getPrice());
+            $orderProduct->setProduct($product);
 
             $quantity = (int) $orderProduct->getQuantity();
             $pricePerOne = (float) $orderProduct->getPricePerOne();
@@ -94,7 +95,7 @@ class OrderManager extends AbstractManager
         $this->entityManager->flush();
         $this->cartManager->remove($cart);
 
-        $this->bus->dispatch(new SendOrderConfirmationEmail($order->getId()));
+        $this->bus->dispatch(new SendOrderConfirmationEmail((int) $order->getId()));
     }
 
     /**

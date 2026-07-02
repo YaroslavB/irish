@@ -13,18 +13,16 @@ class CategoryManager extends AbstractManager
         return $this->entityManager->getRepository(Category::class);
     }
 
-    /**
-     * @param Category $category
-     */
-    public function remove(object $category): void
+    public function remove(object $entity): void
     {
-        $category->setIsDeleted(true);
+        /** @var Category $entity */
+        $entity->setIsDeleted(true);
 
         /** @var Product $product */
-        foreach ($category->getProducts()->getValues() as $product) {
+        foreach ($entity->getProducts()->getValues() as $product) {
             $product->setIsDeleted(true);
         }
-        $this->save($category);
+        $this->save($entity);
     }
 
 }

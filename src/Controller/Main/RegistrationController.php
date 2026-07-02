@@ -83,7 +83,7 @@ class RegistrationController extends AbstractController
         TranslatorInterface $translator,
         UserRepository $userRepository
     ): Response {
-        $id = $request->get('id');
+        $id = $request->query->get('id');
 
         if (null === $id) {
             return $this->redirectToRoute('app_register');

@@ -20,6 +20,8 @@
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <directory name="src/Entity"/>
+                <!-- AbstractController::$container is injected via setContainer(), not the constructor -->
+                <directory name="src/Controller"/>
             </errorLevel>
         </PropertyNotSetInConstructor>
 

@@ -76,12 +76,12 @@ class EditFormDto
         }
         // Set the properties of the DTO
         $dto->id = $product->getId();
-        $dto->title = $product->getTitle();
+        $dto->title = $product->getTitle() ?? '';
         $dto->price = $product->getPrice();
-        $dto->quantity = $product->getQuantity();
+        $dto->quantity = $product->getQuantity() ?? 0;
         $dto->description = $product->getDescription();
-        $dto->isPublished = $product->getIsPublished();
-        $dto->isDeleted = $product->getIsDeleted();
+        $dto->isPublished = $product->getIsPublished() ?? false;
+        $dto->isDeleted = $product->getIsDeleted() ?? false;
 
         return $dto;
     }

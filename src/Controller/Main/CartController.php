@@ -36,7 +36,7 @@ class CartController extends AbstractController
         }
 
         $sessionId = $request->cookies->get('PHPSESSID');
-        if ($sessionId) {
+        if (is_string($sessionId) && $sessionId !== '') {
             $orderManager->createOrderFromCartFromSession($sessionId, $user);
         }
 
