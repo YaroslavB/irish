@@ -61,7 +61,10 @@
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "audit": {
+            "abandoned": "report"
+        }
     },
     "autoload": {
         "psr-4": {
