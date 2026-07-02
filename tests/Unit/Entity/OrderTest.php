@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Entity;
 
+use DateTimeImmutable;
 use App\Entity\Order;
 use App\Entity\User;
 use App\Entity\OrderProduct;
@@ -61,7 +62,7 @@ class OrderTest extends TestCase
 
     public function testSetAndGetCreatedAt(): void
     {
-        $date = new \DateTimeImmutable('2024-01-15 10:30:00');
+        $date = new DateTimeImmutable('2024-01-15 10:30:00');
         $this->order->setCreatedAt($date);
         
         $this->assertSame($date, $this->order->getCreatedAt());
@@ -69,7 +70,7 @@ class OrderTest extends TestCase
 
     public function testSetAndGetUpdatedAt(): void
     {
-        $date = new \DateTimeImmutable('2024-01-15 11:30:00');
+        $date = new DateTimeImmutable('2024-01-15 11:30:00');
         $this->order->setUpdatedAt($date);
         
         $this->assertSame($date, $this->order->getUpdatedAt());
@@ -89,12 +90,12 @@ class OrderTest extends TestCase
 
     public function testCreatedAtAndUpdatedAtAreSetOnConstruction(): void
     {
-        $before = new \DateTimeImmutable();
+        $before = new DateTimeImmutable();
         $order = new Order();
-        $after = new \DateTimeImmutable();
+        $after = new DateTimeImmutable();
         
-        $this->assertInstanceOf(\DateTimeImmutable::class, $order->getCreatedAt());
-        $this->assertInstanceOf(\DateTimeImmutable::class, $order->getUpdatedAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $order->getCreatedAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $order->getUpdatedAt());
         $this->assertGreaterThanOrEqual($before, $order->getCreatedAt());
         $this->assertLessThanOrEqual($after, $order->getCreatedAt());
         $this->assertGreaterThanOrEqual($before, $order->getUpdatedAt());

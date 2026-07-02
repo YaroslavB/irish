@@ -6,6 +6,10 @@ use Rector\Config\RectorConfig;
 use Rector\Symfony\Set\SymfonySetList;
 
 return RectorConfig::configure()
+    ->withPaths([
+        __DIR__.'/src',
+        __DIR__.'/tests',
+    ])
     ->withImportNames()
     ->withSymfonyContainerXml(
         __DIR__.'/var/cache/dev/App_KernelDevDebugContainer.xml'

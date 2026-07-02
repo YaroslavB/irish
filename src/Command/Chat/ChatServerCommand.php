@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\Chat;
 
+use DateTimeImmutable;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -218,7 +219,7 @@ class ChatServerCommand extends Command
         }
 
         $nick = $nicknames[$id];
-        $message = ChatProtocol::formatBroadcast($nick, $text, new \DateTimeImmutable());
+        $message = ChatProtocol::formatBroadcast($nick, $text, new DateTimeImmutable());
         $this->broadcast($clients, $message);
         $io->write($message);
     }

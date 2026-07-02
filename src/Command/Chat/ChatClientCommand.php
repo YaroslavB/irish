@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\Chat;
 
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -58,7 +59,7 @@ class ChatClientCommand extends Command
 
         try {
             $socket = $this->connect($host, $port);
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $io->error($e->getMessage());
 
             return Command::FAILURE;
@@ -73,14 +74,14 @@ class ChatClientCommand extends Command
 
     /**
      * @return resource
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     private function connect(string $host, int $port): mixed
     {
         $socket = stream_socket_client("tcp://{$host}:{$port}", $errno, $errstr, 5);
 
         if ($socket === false) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf('Cannot connect to %s:%d — %s (%d)', $host, $port, $errstr, $errno)
             );
         }

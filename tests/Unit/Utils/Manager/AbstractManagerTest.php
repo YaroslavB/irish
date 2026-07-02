@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Utils\Manager;
 
+use stdClass;
 use App\Utils\Manager\AbstractManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
@@ -38,7 +39,7 @@ class AbstractManagerTest extends TestCase
 
     public function testSavePersistsAndFlushesEntity(): void
     {
-        $entity = new \stdClass();
+        $entity = new stdClass();
 
         $this->entityManager->expects($this->once())
             ->method('persist')
@@ -52,7 +53,7 @@ class AbstractManagerTest extends TestCase
 
     public function testRemoveRemovesAndFlushesEntity(): void
     {
-        $entity = new \stdClass();
+        $entity = new stdClass();
 
         $this->entityManager->expects($this->once())
             ->method('remove')
@@ -67,7 +68,7 @@ class AbstractManagerTest extends TestCase
     public function testFindReturnsEntityFromRepository(): void
     {
         $entityId = 42;
-        $expectedEntity = new \stdClass();
+        $expectedEntity = new stdClass();
 
         $this->repository->expects($this->once())
             ->method('find')
@@ -102,8 +103,8 @@ class AbstractManagerTest extends TestCase
 
     public function testSaveAndRemoveCallsAreIndependent(): void
     {
-        $entity1 = new \stdClass();
-        $entity2 = new \stdClass();
+        $entity1 = new stdClass();
+        $entity2 = new stdClass();
 
         // Test that multiple saves work independently
         $this->entityManager->expects($this->exactly(2))

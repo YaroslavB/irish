@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command\Chat;
 
+use DateTimeImmutable;
+
 final class ChatProtocol
 {
     public static function parseNick(string $line): ?string
@@ -34,7 +36,7 @@ final class ChatProtocol
         return $text;
     }
 
-    public static function formatBroadcast(string $nick, string $text, \DateTimeImmutable $time): string
+    public static function formatBroadcast(string $nick, string $text, DateTimeImmutable $time): string
     {
         return sprintf("[%s] %s: %s\n", $time->format('H:i:s'), $nick, $text);
     }

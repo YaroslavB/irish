@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Utils\File;
 
+use Symfony\Component\HttpFoundation\File\File;
 use App\Utils\File\FileSaver;
 use App\Utils\Filesystem\FileSystemHelper;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -172,7 +173,7 @@ class FileSaverTest extends TestCase
             ->method('move')
             ->willReturnCallback(function () use (&$callOrder) {
                 $callOrder[] = 'move';
-                return $this->createMock(\Symfony\Component\HttpFoundation\File\File::class);
+                return $this->createMock(File::class);
             });
 
         $this->fileSaver->saveUploadedFileTemp($uploadedFile);

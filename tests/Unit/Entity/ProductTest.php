@@ -2,6 +2,8 @@
 
 namespace App\Tests\Unit\Entity;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use App\Entity\Product;
 use App\Entity\Category;
 use App\Entity\ProductImage;
@@ -130,9 +132,9 @@ class ProductTest extends TestCase
 
     public function testCreatedAtIsSetOnConstruction(): void
     {
-        $now = new \DateTimeImmutable();
+        $now = new DateTimeImmutable();
 
-        $this->assertInstanceOf(\DateTimeInterface::class, $this->product->getCreatedAt());
+        $this->assertInstanceOf(DateTimeInterface::class, $this->product->getCreatedAt());
         $this->assertLessThanOrEqual($now, $this->product->getCreatedAt());
     }
 }

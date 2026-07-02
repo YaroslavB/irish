@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Command\Chat;
 
+use DateTimeImmutable;
 use App\Command\Chat\ChatProtocol;
 use PHPUnit\Framework\TestCase;
 
@@ -61,7 +62,7 @@ class ChatProtocolTest extends TestCase
 
     public function testFormatBroadcast(): void
     {
-        $time = new \DateTimeImmutable('2024-01-01 14:32:01');
+        $time = new DateTimeImmutable('2024-01-01 14:32:01');
         self::assertSame("[14:32:01] alice: hi there\n", ChatProtocol::formatBroadcast('alice', 'hi there', $time));
     }
 

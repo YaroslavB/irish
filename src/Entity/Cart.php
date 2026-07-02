@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use App\Repository\CartRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,16 +29,17 @@ class Cart
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private ?DateTimeInterface $createdAt = null;
 
     /**
+     * @var Collection<int, CartProduct>
      * @ORM\OneToMany(targetEntity=CartProduct::class, mappedBy="cart", orphanRemoval=true)
      */
-    private $cartProducts;
+    private Collection $cartProducts;
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
         $this->cartProducts = new ArrayCollection();
     }
 
@@ -56,12 +59,12 @@ class Cart
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -69,7 +72,7 @@ class Cart
     }
 
     /**
-     * @return Collection|CartProduct[]
+     * @return Collection<int, CartProduct>
      */
     public function getCartProducts(): Collection
     {

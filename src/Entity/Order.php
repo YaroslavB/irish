@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,51 +19,52 @@ class Order
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $createdAt;
+    private ?DateTimeImmutable $createdAt = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $owner;
+    private ?User $owner = null;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $status;
+    private ?int $status = null;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $totalPrice;
+    private ?float $totalPrice = null;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $updatedAt;
+    private ?DateTimeImmutable $updatedAt = null;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isDeleted;
+    private ?bool $isDeleted = null;
 
     /**
+     * @var Collection<int, OrderProduct>
      * @ORM\OneToMany(targetEntity=OrderProduct::class, mappedBy="appOrder")
      */
-    private $orderProducts;
+    private Collection $orderProducts;
 
     /**
      * @param $id
      */
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
         $this->orderProducts = new ArrayCollection();
         $this->isDeleted = false;
     }
@@ -73,12 +75,12 @@ class Order
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -121,12 +123,12 @@ class Order
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
