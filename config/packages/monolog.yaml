@@ -11,6 +11,11 @@ when@dev:
                 level: debug
                 channels: ["!event"]
             logstash:
+                # WhatFailureGroupHandler swallows exceptions from its members, so an
+                # unreachable logstash never aborts the running command/request.
+                type: whatfailuregroup
+                members: [logstash_socket]
+            logstash_socket:
                 type: socket
                 connection_string: "logstash:5044"
                 level: debug
@@ -57,6 +62,11 @@ when@prod:
                 level: debug
                 formatter: monolog.formatter.json
             logstash:
+                # WhatFailureGroupHandler swallows exceptions from its members, so an
+                # unreachable logstash never aborts the running command/request.
+                type: whatfailuregroup
+                members: [logstash_socket]
+            logstash_socket:
                 type: socket
                 connection_string: "logstash:5044"
                 level: warning
