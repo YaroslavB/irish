@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Utils\Manager;
 
-use DateTimeImmutable;
-use App\Entity\User;
 use App\Entity\Cart;
-use Doctrine\Common\Collections\ArrayCollection;
-use ReflectionProperty;
+use App\Entity\CartProduct;
 use App\Entity\Order;
+use App\Entity\Product;
+use App\Entity\User;
+use App\Exception\InsufficientStockException;
 use App\Message\SendOrderConfirmationEmail;
 use App\Utils\Manager\CartManager;
 use App\Utils\Manager\OrderManager;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
+use stdClass;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -45,19 +48,13 @@ class OrderManagerTest extends TestCase
 
     public function testGetRepositoryReturnsOrderRepository(): void
     {
-        $result = $this->orderManager->getRepository();
-
-        $this->assertSame($this->repository, $result);
+        $this->assertSame($this->repository, $this->orderManager->getRepository());
     }
 
     public function testRemoveSetsIsDeletedAndSaves(): void
     {
         $order = $this->createMock(Order::class);
-
-        $order->expects($this->once())
-            ->method('setIsDeleted')
-            ->with(true);
-
+        $order->expects($this->once())->method('setIsDeleted')->with(true);
         $order->expects($this->once())
             ->method('setUpdatedAt')
             ->with($this->isInstanceOf(DateTimeImmutable::class));
@@ -68,29 +65,9 @@ class OrderManagerTest extends TestCase
         $this->orderManager->remove($order);
     }
 
-    public function testCreateOrderFromCartFromSessionWithNoCart(): void
-    {
-        $cartRepository = $this->createMock(ObjectRepository::class);
-        $this->cartManager
-            ->method('getRepository')
-            ->willReturn($cartRepository);
-
-        $cartRepository
-            ->expects($this->once())
-            ->method('findOneBy')
-            ->with(['sessionId' => 'session123'])
-            ->willReturn(null);
-
-        $user = $this->createMock(User::class);
-        $result = $this->orderManager->createOrderFromCartFromSession('session123', $user);
-
-        $this->assertNull($result);
-    }
-
     public function testSaveSetsUpdatedAtAndPersists(): void
     {
         $order = $this->createMock(Order::class);
-
         $order->expects($this->once())
             ->method('setUpdatedAt')
             ->with($this->isInstanceOf(DateTimeImmutable::class));
@@ -101,38 +78,96 @@ class OrderManagerTest extends TestCase
         $this->orderManager->save($order);
     }
 
-    public function testCreateOrderFromCartFromSessionDispatchesConfirmationEmail(): void
+    public function testSaveAcceptsNonOrderEntity(): void
     {
-        $cartRepository = $this->createMock(ObjectRepository::class);
-        $this->cartManager->method('getRepository')->willReturn($cartRepository);
+        $this->entityManager->expects($this->once())->method('persist');
 
-        $cart = $this->createMock(Cart::class);
-        $cart->method('getCartProducts')->willReturn(new ArrayCollection());
+        $this->orderManager->save(new stdClass());
+    }
 
-        $cartRepository
-            ->method('findOneBy')
-            ->with(['sessionId' => 'abc'])
-            ->willReturn($cart);
+    public function testCreateOrderComputesExactTotalAndDecrementsStock(): void
+    {
+        // 3 × 0.10 + 1 × 0.20 is 0.5 exactly only without float math
+        $first = $this->product('Stout', '0.10', 5);
+        $second = $this->product('Cider', '0.20', 1);
+        $cart = $this->cart([[$first, 3], [$second, 1]]);
+        $this->givenPersistAssignsOrderId();
 
-        $this->entityManager
-            ->method('persist')
-            ->willReturnCallback(function (object $entity): void {
-                if ($entity instanceof Order) {
-                    $reflection = new ReflectionProperty(Order::class, 'id');
-                    $reflection->setAccessible(true);
-                    $reflection->setValue($entity, 1);
-                }
-            });
-        $this->entityManager->method('flush');
-
-        $this->bus
-            ->expects($this->once())
+        $this->cartManager->expects($this->once())->method('remove')->with($cart);
+        $this->bus->expects($this->once())
             ->method('dispatch')
             ->with($this->isInstanceOf(SendOrderConfirmationEmail::class))
-            ->willReturn(new Envelope(new SendOrderConfirmationEmail(0)));
+            ->willReturn(new Envelope(new SendOrderConfirmationEmail(1)));
 
-        $user = $this->createMock(User::class);
-        $this->orderManager->createOrderFromCartFromSession('abc', $user);
+        $order = $this->orderManager->createOrderFromCart($cart, new User());
+
+        $this->assertSame('0.50', $order->getTotalPrice());
+        $this->assertCount(2, $order->getOrderProducts());
+        $this->assertSame(2, $first->getQuantity());
+        $this->assertSame(0, $second->getQuantity());
+    }
+
+    public function testCreateOrderRejectsInsufficientStock(): void
+    {
+        $product = $this->product('Whiskey', '49.99', 1);
+        $cart = $this->cart([[$product, 2]]);
+
+        $this->entityManager->expects($this->never())->method('flush');
+        $this->cartManager->expects($this->never())->method('remove');
+        $this->bus->expects($this->never())->method('dispatch');
+
+        $this->expectException(InsufficientStockException::class);
+        $this->orderManager->createOrderFromCart($cart, new User());
+    }
+
+    /**
+     * @dataProvider centsProvider
+     */
+    public function testToCents(string $price, int $expected): void
+    {
+        $this->assertSame($expected, OrderManager::toCents($price));
+    }
+
+    /**
+     * @return array<string, array{string, int}>
+     */
+    public static function centsProvider(): array
+    {
+        return [
+            'two decimals' => ['12.34', 1234],
+            'one decimal'  => ['12.5', 1250],
+            'integer'      => ['12', 1200],
+            'zero'         => ['0.00', 0],
+            'sub-unit'     => ['0.07', 7],
+        ];
+    }
+
+    private function product(string $title, string $price, int $quantity): Product
+    {
+        return (new Product())->setTitle($title)->setPrice($price)->setQuantity($quantity);
+    }
+
+    /**
+     * @param list<array{Product, int}> $lines
+     */
+    private function cart(array $lines): Cart
+    {
+        $cart = new Cart();
+        foreach ($lines as [$product, $quantity]) {
+            $cart->addCartProduct((new CartProduct())->setProduct($product)->setQuantity($quantity));
+        }
+
+        return $cart;
+    }
+
+    private function givenPersistAssignsOrderId(): void
+    {
+        $this->entityManager
+            ->method('persist')
+            ->willReturnCallback(static function (object $entity): void {
+                if ($entity instanceof Order) {
+                    (new ReflectionProperty(Order::class, 'id'))->setValue($entity, 1);
+                }
+            });
     }
 }
-

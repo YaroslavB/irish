@@ -40,6 +40,10 @@ class CartManager extends AbstractManager
     {
         $cart = $this->findSessionCart($session);
         if ($cart === null) {
+            // lazy firewall: anonymous visitors may not have a started session (empty id) yet
+            if (!$session->isStarted()) {
+                $session->start();
+            }
             $cart = new Cart();
             $cart->setSessionId($session->getId());
         }

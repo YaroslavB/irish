@@ -43,7 +43,7 @@ class SendOrderStatusChangedEmailHandlerTest extends TestCase
         $order->method('getId')->willReturn(7);
         $order->method('getOwner')->willReturn($user);
         $order->method('getOrderProducts')->willReturn(new ArrayCollection());
-        $order->method('getTotalPrice')->willReturn(49.99);
+        $order->method('getTotalPrice')->willReturn('49.99');
 
         $this->orderRepository
             ->expects($this->once())

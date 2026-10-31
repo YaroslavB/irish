@@ -45,7 +45,7 @@ class OrderTest extends TestCase
 
     public function testSetAndGetTotalPrice(): void
     {
-        $totalPrice = 199.99;
+        $totalPrice = '199.99';
         $this->order->setTotalPrice($totalPrice);
         
         $this->assertSame($totalPrice, $this->order->getTotalPrice());
@@ -60,12 +60,9 @@ class OrderTest extends TestCase
         $this->assertTrue($this->order->isDeleted());
     }
 
-    public function testSetAndGetCreatedAt(): void
+    public function testCreatedAtIsSetOnConstruction(): void
     {
-        $date = new DateTimeImmutable('2024-01-15 10:30:00');
-        $this->order->setCreatedAt($date);
-        
-        $this->assertSame($date, $this->order->getCreatedAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $this->order->getCreatedAt());
     }
 
     public function testSetAndGetUpdatedAt(): void

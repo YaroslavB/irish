@@ -1,0 +1,15 @@
+{# Prev/next pager. Expects: route, routeParams (optional), page, hasNext #}
+{% set routeParams = routeParams|default({}) %}
+{% if page > 1 or hasNext %}
+    <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {{ page > 1 ? '' : 'disabled' }}">
+                <a class="page-link" href="{{ path(route, routeParams|merge({'page': page - 1})) }}">Previous</a>
+            </li>
+            <li class="page-item active"><span class="page-link">{{ page }}</span></li>
+            <li class="page-item {{ hasNext ? '' : 'disabled' }}">
+                <a class="page-link" href="{{ path(route, routeParams|merge({'page': page + 1})) }}">Next</a>
+            </li>
+        </ul>
+    </nav>
+{% endif %}
