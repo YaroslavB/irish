@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form\DTO;
 
 use App\Entity\Category;
@@ -9,81 +11,48 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class EditFormDto
 {
-    /**
-     * @var int|null
-     */
-    public $id;
+    public ?int $id = null;
 
-    /**
-     * @var string
-     */
     #[Assert\NotBlank(message: 'Title is required')]
-    public $title;
+    public string $title = '';
 
-    /**
-     * @var string|null
-     */
+    /** Decimal string (form uses NumberType input=string), never a float. */
     #[Assert\NotBlank(message: 'Price is required')]
-    #[Assert\GreaterThanOrEqual(value: '0')]
-    public $price;
+    #[Assert\PositiveOrZero]
+    public ?string $price = null;
 
-    /**
-     * @var int
-     */
     #[Assert\NotBlank(message: 'Quantity is required')]
-    #[Assert\GreaterThan(value: '0')]
-    public $quantity;
+    #[Assert\PositiveOrZero]
+    public ?int $quantity = null;
 
-    /**
-     * @var string|null
-     */
-    public ?string $description;
+    public ?string $description = null;
 
-
-    /**
-     * @var Category
-     */
     #[Assert\NotBlank(message: 'Category is required')]
-    public $category;
+    public ?Category $category = null;
 
-    /**
-     * @var UploadedFile|null
-     */
     #[Assert\File(maxSize: '5024k', mimeTypes: ['image/jpeg', 'image/png'], mimeTypesMessage: 'Please upload a valid image')]
-    public $newImage;
-    /**
-     * @var bool
-     */
-    public bool $isPublished;
-    /**
-     * @var  bool
-     */
-    public bool $isDeleted;
+    public ?UploadedFile $newImage = null;
 
-    /**
-     *  Create a DTO object from a Product object
-     *
-     * @param Product|null $product
-     *
-     * @return self The created DTO object
-     */
+    public bool $isPublished = false;
+
+    public bool $isDeleted = false;
+
     public static function fromProduct(?Product $product): self
     {
         $dto = new self();
-        // If no product is provided, return an empty DTO
         if (!$product) {
             return $dto;
         }
-        // Set the properties of the DTO
+
         $dto->id = $product->getId();
         $dto->title = $product->getTitle() ?? '';
         $dto->price = $product->getPrice();
         $dto->quantity = $product->getQuantity() ?? 0;
         $dto->description = $product->getDescription();
+        $dto->category = $product->getCategory();
         $dto->isPublished = $product->getIsPublished() ?? false;
         $dto->isDeleted = $product->getIsDeleted() ?? false;
 
         return $dto;
     }
-
 }

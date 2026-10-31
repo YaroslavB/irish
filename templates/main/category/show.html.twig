@@ -54,6 +54,12 @@
 
                         </div>
                     </div>
+                    {% include '_embed/_pager.html.twig' with {
+                        'route': 'main_category_show',
+                        'routeParams': {'slug': category.slug},
+                        'page': page,
+                        'hasNext': hasNext
+                    } %}
                 </div>
             </div>
         </div>

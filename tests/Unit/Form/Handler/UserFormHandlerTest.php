@@ -73,9 +73,9 @@ class UserFormHandlerTest extends TestCase
         
         $form->method('getData')->willReturn($user);
         $form->method('has')
-            ->willReturnCallback(fn($field) => $field === 'planePassword');
+            ->willReturnCallback(fn($field) => $field === 'plainPassword');
         $form->method('get')
-            ->with('planePassword')
+            ->with('plainPassword')
             ->willReturn($passwordField);
         $passwordField->method('getData')->willReturn('plainPassword123');
 
@@ -90,6 +90,24 @@ class UserFormHandlerTest extends TestCase
         $result = $this->handler->processEditForm($form);
 
         $this->assertEquals('hashedPassword123', $result->getPassword());
+    }
+
+    public function testProcessEditFormKeepsPasswordWhenEmpty(): void
+    {
+        $user = (new User())->setPassword('existingHash');
+        $form = $this->createMock(FormInterface::class);
+        $passwordField = $this->createMock(FormInterface::class);
+
+        $form->method('getData')->willReturn($user);
+        $form->method('has')->willReturnCallback(fn($field) => $field === 'plainPassword');
+        $form->method('get')->with('plainPassword')->willReturn($passwordField);
+        $passwordField->method('getData')->willReturn(null);
+
+        $this->passwordHasher->expects($this->never())->method('hashPassword');
+
+        $result = $this->handler->processEditForm($form);
+
+        $this->assertSame('existingHash', $result->getPassword());
     }
 }
 

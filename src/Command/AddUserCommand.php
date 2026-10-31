@@ -9,6 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -20,7 +21,7 @@ class AddUserCommand extends Command
     protected static $defaultName = 'app:add-user';
     protected static $defaultDescription = 'Add user to database ';
     private EntityManagerInterface $entityManager;
-    private UserPasswordHasherInterface $password_hasher;
+    private UserPasswordHasherInterface $passwordHasher;
     private UserRepository $userRepository;
 
     /**
@@ -28,13 +29,13 @@ class AddUserCommand extends Command
      */
     public function __construct(
         EntityManagerInterface      $entityManager,
-        UserPasswordHasherInterface $password_hasher,
+        UserPasswordHasherInterface $passwordHasher,
         UserRepository              $userRepository
     )
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-        $this->password_hasher = $password_hasher;
+        $this->passwordHasher = $passwordHasher;
         $this->userRepository = $userRepository;
     }
 
@@ -45,13 +46,13 @@ class AddUserCommand extends Command
             ->addOption(
                 'email',
                 'u',
-                InputArgument::REQUIRED,
+                InputOption::VALUE_REQUIRED,
                 'User email'
             )
             ->addOption(
                 'password',
                 'p',
-                InputArgument::REQUIRED,
+                InputOption::VALUE_REQUIRED,
                 'User password'
             )
             ->addArgument(
@@ -115,9 +116,6 @@ class AddUserCommand extends Command
             $eventData->getMemory() / 1000 / 1000
         );
         $io->comment($stopwatchMassage);
-        $io->success(
-            'You have a new command! Now make it your own! Pass --help to see your options.'
-        );
 
         return Command::SUCCESS;
     }
@@ -146,7 +144,7 @@ class AddUserCommand extends Command
         $user = new User();
         $user->setEmail($email);
         $user->setRoles([$isAdmin ? 'ROLE_ADMIN' : 'ROLE_USER']);
-        $encodedPass = $this->password_hasher->hashPassword($user, $password);
+        $encodedPass = $this->passwordHasher->hashPassword($user, $password);
         $user->setPassword($encodedPass);
         $user->setIsVerified(true);
         $this->entityManager->persist($user);

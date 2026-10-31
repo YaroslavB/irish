@@ -38,9 +38,9 @@ class Order
     private ?int $status = null;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
-    private ?float $totalPrice = null;
+    private ?string $totalPrice = null;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -58,9 +58,6 @@ class Order
      */
     private Collection $orderProducts;
 
-    /**
-     * @param $id
-     */
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
@@ -78,13 +75,6 @@ class Order
     public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     public function getOwner(): ?User
@@ -111,12 +101,12 @@ class Order
         return $this;
     }
 
-    public function getTotalPrice(): ?float
+    public function getTotalPrice(): ?string
     {
         return $this->totalPrice;
     }
 
-    public function setTotalPrice(?float $totalPrice): self
+    public function setTotalPrice(?string $totalPrice): self
     {
         $this->totalPrice = $totalPrice;
 
@@ -135,7 +125,7 @@ class Order
         return $this;
     }
 
-    public function isIsDeleted(): ?bool
+    public function isDeleted(): ?bool
     {
         return $this->isDeleted;
     }

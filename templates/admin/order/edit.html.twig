@@ -114,6 +114,7 @@
             'modalTitle': 'Delete category?',
             'modaslText':   'Delete category',
             'actionUrl': path('admin_order_delete', {'id': order.id}),
+            'csrfTokenId': 'delete-order-' ~ order.id,
             'modalBtnText':'Delete order'} %}
     {% endif %}
 {% endblock %}

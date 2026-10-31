@@ -111,10 +111,8 @@
                                  alt="{{ image.filenameMiddle }}">
                         </div>
                         <div class="col-md-7">
-                            <a href="{{ path('app_admin_product_image_delete',{'id':image.id}) }}"
-                               class="btn btn-outline-info">
-                                DELETE
-                            </a>
+                            {# submits the standalone form rendered after form_end (forms can't nest) #}
+                            <button type="submit" form="delete-image-{{ image.id }}" class="btn btn-outline-info">DELETE</button>
                         </div>
                     </div>
                 {% endfor %}
@@ -150,6 +148,11 @@
             } %}
             {{ form_rest(form) }}
             {{ form_end(form) }}
+            {% for image in images %}
+                <form id="delete-image-{{ image.id }}" method="post" action="{{ path('app_admin_product_image_delete',{'id':image.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-product-image-' ~ image.id) }}">
+                </form>
+            {% endfor %}
         </div>
     </div>
 
@@ -159,6 +162,7 @@
             'modalTitle': 'Delete product?',
             'modaslText':   'Delete product',
             'actionUrl': path('admin_product_delete', {'id': product.id}),
+            'csrfTokenId': 'delete-product-' ~ product.id,
             'modalBtnText':'Delete product'} %}
     {% endif %}
 {% endblock %}

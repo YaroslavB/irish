@@ -61,7 +61,7 @@ class Category
 
     public function setTitle(string $title): self
     {
-        $this->title = ucfirst(strtolower($title));
+        $this->title = $title;
 
         return $this;
     }
@@ -108,7 +108,7 @@ class Category
         return $this;
     }
 
-    public function isIsDeleted(): ?bool
+    public function isDeleted(): ?bool
     {
         return $this->isDeleted;
     }

@@ -19,7 +19,7 @@ class OrderTest extends TestCase
 
     public function testNewOrderHasDefaultValues(): void
     {
-        $this->assertFalse($this->order->isIsDeleted());
+        $this->assertFalse($this->order->isDeleted());
         $this->assertNotNull($this->order->getCreatedAt());
         $this->assertNotNull($this->order->getUpdatedAt());
         $this->assertEmpty($this->order->getOrderProducts());
@@ -45,7 +45,7 @@ class OrderTest extends TestCase
 
     public function testSetAndGetTotalPrice(): void
     {
-        $totalPrice = 199.99;
+        $totalPrice = '199.99';
         $this->order->setTotalPrice($totalPrice);
         
         $this->assertSame($totalPrice, $this->order->getTotalPrice());
@@ -53,19 +53,16 @@ class OrderTest extends TestCase
 
     public function testSetAndGetIsDeleted(): void
     {
-        $this->assertFalse($this->order->isIsDeleted());
+        $this->assertFalse($this->order->isDeleted());
         
         $this->order->setIsDeleted(true);
         
-        $this->assertTrue($this->order->isIsDeleted());
+        $this->assertTrue($this->order->isDeleted());
     }
 
-    public function testSetAndGetCreatedAt(): void
+    public function testCreatedAtIsSetOnConstruction(): void
     {
-        $date = new DateTimeImmutable('2024-01-15 10:30:00');
-        $this->order->setCreatedAt($date);
-        
-        $this->assertSame($date, $this->order->getCreatedAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $this->order->getCreatedAt());
     }
 
     public function testSetAndGetUpdatedAt(): void

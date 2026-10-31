@@ -42,7 +42,7 @@ class ProductManager extends AbstractManager
         Product $product,
         string $tempImageFileName
     ): Product {
-        if (!$tempImageFileName) {
+        if ($tempImageFileName === '') {
             return $product;
         }
 

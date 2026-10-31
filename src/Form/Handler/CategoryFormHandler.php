@@ -25,7 +25,9 @@ class CategoryFormHandler
                 $category = $existingCategory;
             }
         }
-        $category->setTitle($editCategoryDto->title);
+        // Normalise "IRISH WHISKEY" → "Irish whiskey"; multibyte-safe for accented titles
+        $title = mb_strtolower(trim($editCategoryDto->title));
+        $category->setTitle(mb_strtoupper(mb_substr($title, 0, 1)) . mb_substr($title, 1));
         $this->categoryManager->save($category);
 
         return $category;

@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Utils\Manager;
 
-use DateTimeImmutable;
 use App\Entity\Cart;
-use App\Entity\CartProduct;
 use App\Entity\Order;
 use App\Entity\OrderProduct;
 use App\Entity\StaticStorage\OrderStaticStorage;
 use App\Entity\User;
+use App\Exception\InsufficientStockException;
 use App\Message\SendOrderConfirmationEmail;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -42,70 +44,73 @@ class OrderManager extends AbstractManager
     }
 
     /**
-     * @param string $sessionId
-     * @param User   $user
+     * Converts the cart into an order, decrements stock and removes the cart.
      *
-     * @return object|null
+     * @throws InsufficientStockException when any product has less stock than requested
      */
-    public function createOrderFromCartFromSession(
-        string $sessionId,
-        User $user
-    ): ?object {
-        $cart = $this->cartManager->getRepository()->findOneBy(
-            ['sessionId' => $sessionId]
-        );
-        if ($cart instanceof Cart) {
-            $this->createOrderFromCart($cart, $user);
-        }
-
-        return $cart;
-    }
-
-
-    private function createOrderFromCart(Cart $cart, User $user): void
+    public function createOrderFromCart(Cart $cart, User $user): Order
     {
         $order = new Order();
         $order->setOwner($user);
         $order->setStatus(OrderStaticStorage::ORDER_STATUS_CREATED);
-        $orderTotalPrice = 0.0;
+        $totalCents = 0;
 
-        /** @var CartProduct $cartProduct */
-        foreach ($cart->getCartProducts()->getValues() as $cartProduct) {
+        // ponytail: no row lock, two concurrent checkouts can both pass the stock check; add PESSIMISTIC_WRITE when traffic warrants
+        foreach ($cart->getCartProducts() as $cartProduct) {
             $product = $cartProduct->getProduct();
             if ($product === null) {
                 continue;
             }
 
+            $quantity = (int) $cartProduct->getQuantity();
+            $inStock = (int) $product->getQuantity();
+            if ($quantity > $inStock) {
+                throw new InsufficientStockException(sprintf(
+                    'Not enough stock for "%s": requested %d, available %d',
+                    (string) $product->getTitle(),
+                    $quantity,
+                    $inStock
+                ));
+            }
+            $product->setQuantity($inStock - $quantity);
+
+            $pricePerOne = (string) $product->getPrice();
             $orderProduct = new OrderProduct();
-            $orderProduct->setAppOrder($order);
-            $orderProduct->setQuantity((int) $cartProduct->getQuantity());
-            $orderProduct->setPricePerOne((string) $product->getPrice());
+            $orderProduct->setQuantity($quantity);
+            $orderProduct->setPricePerOne($pricePerOne);
             $orderProduct->setProduct($product);
-
-            $quantity = (int) $orderProduct->getQuantity();
-            $pricePerOne = (float) $orderProduct->getPricePerOne();
-            $orderTotalPrice += $quantity * $pricePerOne;
-
             $order->addOrderProduct($orderProduct);
             $this->entityManager->persist($orderProduct);
+
+            $totalCents += $quantity * self::toCents($pricePerOne);
         }
 
-        $order->setTotalPrice($orderTotalPrice);
+        $order->setTotalPrice(sprintf('%d.%02d', intdiv($totalCents, 100), $totalCents % 100));
         $this->entityManager->persist($order);
         $this->entityManager->flush();
         $this->cartManager->remove($cart);
 
         $this->bus->dispatch(new SendOrderConfirmationEmail((int) $order->getId()));
+
+        return $order;
     }
 
-    /**
-     * @param object $entity
-     */
     public function save(object $entity): void
     {
-        $entity->setUpdatedAt(new DateTimeImmutable());
+        if ($entity instanceof Order) {
+            $entity->setUpdatedAt(new DateTimeImmutable());
+        }
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
     }
 
+    /**
+     * "12.5" / "12.50" / "12" → 1250. Prices are decimal(6,2) strings, so no float math.
+     */
+    public static function toCents(string $price): int
+    {
+        [$whole, $fraction] = array_pad(explode('.', $price, 2), 2, '0');
+
+        return (int) $whole * 100 + (int) str_pad(substr($fraction, 0, 2), 2, '0');
+    }
 }

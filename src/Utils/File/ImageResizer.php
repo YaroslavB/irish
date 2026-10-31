@@ -57,7 +57,9 @@ class ImageResizer
         $targetFilePath = sprintf('%s/%s', $targetFolder, $targetFileName);
 
         $imagineFile = $this->imagine->open($originalFilePath);
-        $imagineFile->resize(new Box($targetWidth, $targetHeight))->save(
+        // Box needs positive ints; a float like 0.4 would truncate to 0 and throw
+        $box = new Box(max(1, (int) round($targetWidth)), max(1, (int) round($targetHeight)));
+        $imagineFile->resize($box)->save(
             $targetFilePath
         );
 

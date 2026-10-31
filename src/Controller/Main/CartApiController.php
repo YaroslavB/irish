@@ -1,13 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Main;
 
-use App\Entity\Cart;
-use App\Entity\CartProduct;
-use App\Repository\CartProductRepository;
-use App\Repository\CartRepository;
 use App\Repository\ProductRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Utils\Manager\CartManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,21 +19,13 @@ class CartApiController extends AbstractController
     public function saveCart(
         Request $request,
         ProductRepository $productRepository,
-        EntityManagerInterface $entityManager,
-        CartRepository $cartRepository,
-        CartProductRepository $cartProductRepository
+        CartManager $cartManager
     ): Response {
-        $productUuid = $request->request->get('productId');
-        $sessionId = $request->cookies->get('PHPSESSID');
-
-        if (!is_string($sessionId) || $sessionId === '') {
-            return new JsonResponse(
-                ['status' => false, 'error' => 'Session not found'],
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
-        $product = $productRepository->findOneBy(['uuid' => $productUuid]);
+        $product = $productRepository->findOneBy([
+            'uuid'        => $request->request->get('productId'),
+            'isDeleted'   => false,
+            'isPublished' => true,
+        ]);
         if (!$product) {
             return new JsonResponse(
                 ['status' => false, 'error' => 'Product not found'],
@@ -43,29 +33,7 @@ class CartApiController extends AbstractController
             );
         }
 
-        $cart = $cartRepository->findOneBy(['sessionId' => $sessionId]);
-        if (!$cart) {
-            $cart = new Cart();
-            $cart->setSessionId($sessionId);
-        }
-
-        $cartProduct = $cartProductRepository->findOneBy(
-            ['cart' => $cart, 'product' => $product]
-        );
-
-        if (!$cartProduct) {
-            $cartProduct = new CartProduct();
-            $cartProduct->setCart($cart);
-            $cartProduct->setQuantity(1);
-            $cartProduct->setProduct($product);
-            $cart->addCartProduct($cartProduct);
-        } else {
-            $cartProduct->setQuantity($cartProduct->getQuantity() + 1);
-        }
-
-        $entityManager->persist($cart);
-        $entityManager->persist($cartProduct);
-        $entityManager->flush();
+        $cart = $cartManager->addProduct($request->getSession(), $product);
 
         return new JsonResponse([
             'status' => true,

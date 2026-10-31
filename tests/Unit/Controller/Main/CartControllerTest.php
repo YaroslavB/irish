@@ -1,49 +1,56 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Tests\Unit\Controller\Main;
-use Symfony\Component\HttpFoundation\ParameterBag;
+
 use App\Controller\Main\CartController;
 use App\Entity\Cart;
-use App\Entity\User;
-use App\Repository\CartRepository;
-use App\Utils\Manager\OrderManager;
-use PHPUnit\Framework\MockObject\MockObject;
+use App\Utils\Manager\CartManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+
 class CartControllerTest extends TestCase
 {
-    public function testShowReturnsCart(): void
+    public function testShowRendersCartFromSession(): void
     {
         $cart = new Cart();
-        $cartRepository = $this->createMock(CartRepository::class);
-        $cartRepository->method('findOneBy')
-            ->with(['sessionId' => 'test_session'])
+        $request = new Request();
+        $request->setSession(new Session(new MockArraySessionStorage()));
+
+        $cartManager = $this->createMock(CartManager::class);
+        $cartManager->expects($this->once())
+            ->method('findSessionCart')
+            ->with($request->getSession())
             ->willReturn($cart);
-        $request = $this->createMock(Request::class);
-        $request->cookies = new ParameterBag(['PHPSESSID' => 'test_session']);
-        $controller = $this->getMockBuilder(CartController::class)
-            ->onlyMethods(['render'])
-            ->getMock();
+
+        $controller = $this->getMockBuilder(CartController::class)->onlyMethods(['render'])->getMock();
         $controller->expects($this->once())
             ->method('render')
             ->with('main/cart/show.html.twig', ['cart' => $cart])
             ->willReturn(new Response());
-        $controller->show($request, $cartRepository);
+
+        $controller->show($request, $cartManager);
     }
-    public function testShowWithNoCart(): void
+
+    public function testShowIgnoresForgedSessionCookie(): void
     {
-        $cartRepository = $this->createMock(CartRepository::class);
-        $cartRepository->method('findOneBy')->willReturn(null);
-        $request = $this->createMock(Request::class);
-        $request->cookies = new ParameterBag(['PHPSESSID' => 'no_cart']);
-        $controller = $this->getMockBuilder(CartController::class)
-            ->onlyMethods(['render'])
-            ->getMock();
+        // A client-supplied PHPSESSID must not select a cart; only the server-side session does
+        $request = new Request([], [], [], ['PHPSESSID' => 'victim_session']);
+        $request->setSession(new Session(new MockArraySessionStorage()));
+
+        $cartManager = $this->createMock(CartManager::class);
+        $cartManager->method('findSessionCart')->willReturn(null);
+
+        $controller = $this->getMockBuilder(CartController::class)->onlyMethods(['render'])->getMock();
         $controller->expects($this->once())
             ->method('render')
             ->with('main/cart/show.html.twig', ['cart' => null])
             ->willReturn(new Response());
-        $controller->show($request, $cartRepository);
+
+        $controller->show($request, $cartManager);
     }
 }

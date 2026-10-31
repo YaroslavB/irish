@@ -154,13 +154,6 @@ class Product
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;

@@ -89,9 +89,11 @@ class FileSaverTest extends TestCase
             ->method('createFolder')
             ->with($this->uploadTempDir);
 
-        $result = $this->fileSaver->saveUploadedFileTemp($uploadedFile);
+        // Must propagate, never be returned as if it were a file name
+        $this->expectException(FileException::class);
+        $this->expectExceptionMessage($errorMessage);
 
-        $this->assertSame($errorMessage, $result);
+        $this->fileSaver->saveUploadedFileTemp($uploadedFile);
     }
 
     public function testSaveUploadedFileTempWithSpecialCharactersInFilename(): void
