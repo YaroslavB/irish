@@ -9,9 +9,9 @@ use App\Form\Handler\OrderFormHandler;
 use App\Repository\OrderRepository;
 use App\Utils\Manager\OrderManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\{HttpFoundation\Request,
-    HttpFoundation\Response,
-    Routing\Annotation\Route};
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 #[Route(path: '/admin/order', name: 'admin_order_')]
@@ -51,7 +51,7 @@ class OrderController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $order = $orderFormHandler->processEditForm($order);
-            $this->addFlash('success', 'Order  saved');
+            $this->addFlash('success', 'Order saved');
 
             return $this->redirectToRoute(
                 'admin_order_edit',
@@ -73,13 +73,18 @@ class OrderController extends AbstractController
     /**
      * Delete order
      */
-    #[Route(path: '/delete/{id}', name: 'delete')]
+    #[Route(path: '/delete/{id}', name: 'delete', methods: ['POST'])]
     public function delete(
+        Request $request,
         Order $order,
         OrderManager $orderManager
     ): Response {
+        if (!$this->isCsrfTokenValid('delete-order-' . $order->getId(), (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token');
+        }
+
         $orderManager->remove($order);
-        $this->addFlash('warning', 'Order delete');
+        $this->addFlash('warning', 'Order deleted');
 
         return $this->redirectToRoute('admin_order_list');
     }

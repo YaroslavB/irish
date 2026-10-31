@@ -4,6 +4,8 @@ namespace App\Form\Admin;
 
 use App\Entity\Category;
 use App\Form\DTO\EditFormDto;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -40,6 +42,7 @@ class EditFormProductType extends AbstractType
                 NumberType::class,
                 [
                     'scale'    => 2,
+                    'input'    => 'string',
                     'html5'    => true,
                     'required' => true,
                     'attr'     => [
@@ -79,6 +82,10 @@ class EditFormProductType extends AbstractType
                 'required'     => true,
                 'class'        => Category::class,
                 'choice_label' => 'title',
+                'query_builder' => static fn (EntityRepository $repository): QueryBuilder => $repository
+                    ->createQueryBuilder('c')
+                    ->where('c.isDeleted = false OR c.isDeleted IS NULL')
+                    ->orderBy('c.title', 'ASC'),
                 'attr'         => [
                     'class' => 'form-select form-control ',
                 ],

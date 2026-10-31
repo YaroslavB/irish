@@ -34,7 +34,7 @@ class ProductFormHandler
         }
         $product->setTitle($editFormDto->title);
         $product->setPrice((string) $editFormDto->price);
-        $product->setQuantity($editFormDto->quantity);
+        $product->setQuantity((int) $editFormDto->quantity);
         $product->setDescription($editFormDto->description);
         $product->setCategory($editFormDto->category);
         $product->setIsPublished($editFormDto->isPublished);

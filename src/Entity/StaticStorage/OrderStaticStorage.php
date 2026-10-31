@@ -3,7 +3,7 @@
 namespace App\Entity\StaticStorage;
 
 
-class  OrderStaticStorage
+class OrderStaticStorage
 {
     public const ORDER_STATUS_CREATED = 0;
     public const ORDER_STATUS_PROCESSED = 1;

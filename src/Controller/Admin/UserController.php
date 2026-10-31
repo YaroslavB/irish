@@ -58,9 +58,13 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'delete')]
-    public function delete(User $user, UserManager $userManager): Response
+    #[Route('/delete/{id}', name: 'delete', methods: ['POST'])]
+    public function delete(Request $request, User $user, UserManager $userManager): Response
     {
+        if (!$this->isCsrfTokenValid('delete-user-' . $user->getId(), (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token');
+        }
+
         $userManager->remove($user);
         $this->addFlash('warning', 'User deleted');
         return $this->redirectToRoute('admin_user_list');

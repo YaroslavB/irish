@@ -25,8 +25,9 @@ class UserFormHandler
         if ($form->has('newEmail') && $user->getId() === null) {
             $user->setEmail($form->get('newEmail')->getData());
         }
-        if ($form->has('planePassword')) {
-            $plainPassword = $form->get('planePassword')->getData();
+        // Empty password on edit means "keep current"; the form type makes it required for new users
+        $plainPassword = $form->has('plainPassword') ? $form->get('plainPassword')->getData() : null;
+        if (is_string($plainPassword) && $plainPassword !== '') {
             $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
         }
         $this->userManager->save($user);

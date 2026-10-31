@@ -41,9 +41,9 @@ class FileSaver
     }
 
     /**
-     * @param  UploadedFile  $uploadFile
+     * @return string the saved temp file name
      *
-     * @return string
+     * @throws FileException when the file cannot be moved
      */
     public function saveUploadedFileTemp(UploadedFile $uploadFile): string
     {
@@ -62,11 +62,7 @@ class FileSaver
         // check if folder exist before upload file
         $this->systemHelper->createFolder($this->uploadTempDir);
 
-        try {
-            $uploadFile->move($this->uploadTempDir, $fileName);
-        } catch (FileException  $exception) {
-            return $exception->getMessage();
-        }
+        $uploadFile->move($this->uploadTempDir, $fileName);
 
         return $fileName;
     }

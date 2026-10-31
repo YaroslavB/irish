@@ -61,14 +61,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $address = null;
 
     /**
-     * The column is an integer, but the getter/setter expose it as a string,
-     * so use a docblock type (no native type) to keep both Psalm and the
-     * Doctrine mapping validator satisfied.
+     * String, not integer: postcodes keep leading zeros and Eircodes contain letters (e.g. "D02 X285").
      *
-     * @var string|null
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
-    private $zipcode = null;
+    private ?string $zipcode = null;
 
     /**
      * @ORM\Column(type="boolean")
@@ -116,14 +113,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @see UserInterface
      */
     public function getUserIdentifier(): string
-    {
-        return (string) $this->email;
-    }
-
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    public function getUsername(): string
     {
         return (string) $this->email;
     }
@@ -242,7 +231,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isIsDeleted(): ?bool
+    public function isDeleted(): ?bool
     {
         return $this->isDeleted;
     }
