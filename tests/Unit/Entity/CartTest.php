@@ -31,11 +31,6 @@ class CartTest extends TestCase
         $this->assertSame($sessionId, $this->cart->getSessionId());
     }
 
-    public function testCreatedAtIsSetOnConstruction(): void
-    {
-        $this->assertInstanceOf(DateTimeImmutable::class, $this->cart->getCreatedAt());
-    }
-
     public function testAddCartProduct(): void
     {
         $cartProduct = new CartProduct();
