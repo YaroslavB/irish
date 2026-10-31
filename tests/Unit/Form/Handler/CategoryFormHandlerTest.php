@@ -60,6 +60,17 @@ class CategoryFormHandlerTest extends TestCase
         $result = $this->handler->processEditForm($dto);
 
         $this->assertSame($existingCategory, $result);
+        $this->assertSame('Updated title', $result->getTitle());
+    }
+
+    public function testProcessEditFormNormalisesTitle(): void
+    {
+        $dto = new EditCategoryDto();
+        $dto->title = '  ÉIRE WHISKEY ';
+
+        $result = $this->handler->processEditForm($dto);
+
+        $this->assertSame('Éire whiskey', $result->getTitle());
     }
 
     public function testProcessEditFormCreatesNewWhenNotFound(): void

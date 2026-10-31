@@ -19,7 +19,7 @@ class OrderTest extends TestCase
 
     public function testNewOrderHasDefaultValues(): void
     {
-        $this->assertFalse($this->order->isIsDeleted());
+        $this->assertFalse($this->order->isDeleted());
         $this->assertNotNull($this->order->getCreatedAt());
         $this->assertNotNull($this->order->getUpdatedAt());
         $this->assertEmpty($this->order->getOrderProducts());
@@ -53,11 +53,11 @@ class OrderTest extends TestCase
 
     public function testSetAndGetIsDeleted(): void
     {
-        $this->assertFalse($this->order->isIsDeleted());
+        $this->assertFalse($this->order->isDeleted());
         
         $this->order->setIsDeleted(true);
         
-        $this->assertTrue($this->order->isIsDeleted());
+        $this->assertTrue($this->order->isDeleted());
     }
 
     public function testSetAndGetCreatedAt(): void

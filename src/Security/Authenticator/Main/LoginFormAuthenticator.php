@@ -2,7 +2,6 @@
 
 namespace App\Security\Authenticator\Main;
 
-use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,9 +52,6 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
-    /**
-     * @throws Exception
-     */
     public function onAuthenticationSuccess(
         Request $request,
         TokenInterface $token,
@@ -67,8 +63,6 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         return new RedirectResponse($this->urlGenerator->generate('homepage'));
-        // app_profile
-        //throw new Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     /**

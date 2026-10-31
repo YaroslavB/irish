@@ -51,6 +51,7 @@
             'modalTitle': 'Delete category?',
             'modaslText':   'Delete category',
             'actionUrl': path('admin_category_delete', {'id': category.id}),
+            'csrfTokenId': 'delete-category-' ~ category.id,
             'modalBtnText':'Delete category'} %}
     {% endif %}
 {% endblock %}

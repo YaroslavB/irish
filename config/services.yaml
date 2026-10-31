@@ -27,14 +27,9 @@ services:
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
+            - '../src/Exception/'
             - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-
-    App\Command\AddUserCommand:
-        arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
-            $password_hasher: '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
-            $userRepository: '@App\Repository\UserRepository'
 

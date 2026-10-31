@@ -17,25 +17,15 @@ class CategoryTest extends TestCase
 
     public function testNewCategoryHasDefaultValues(): void
     {
-        $this->assertFalse($this->category->isIsDeleted());
+        $this->assertFalse($this->category->isDeleted());
         $this->assertEmpty($this->category->getProducts());
     }
 
     public function testSetAndGetTitle(): void
     {
-        $this->category->setTitle('electronics');
-        
-        // Title should be ucfirst(strtolower())
-        $this->assertSame('Electronics', $this->category->getTitle());
-    }
-
-    public function testSetTitleNormalizesCase(): void
-    {
-        $this->category->setTitle('COMPUTERS');
-        $this->assertSame('Computers', $this->category->getTitle());
-        
-        $this->category->setTitle('mObIlE pHoNeS');
-        $this->assertSame('Mobile phones', $this->category->getTitle());
+        // Setter stores input unchanged; normalisation is CategoryFormHandler's job
+        $this->category->setTitle('IRISH Whiskey');
+        $this->assertSame('IRISH Whiskey', $this->category->getTitle());
     }
 
     public function testSetAndGetSlug(): void
@@ -48,11 +38,11 @@ class CategoryTest extends TestCase
 
     public function testSetAndGetIsDeleted(): void
     {
-        $this->assertFalse($this->category->isIsDeleted());
+        $this->assertFalse($this->category->isDeleted());
 
         $this->category->setIsDeleted(true);
         
-        $this->assertTrue($this->category->isIsDeleted());
+        $this->assertTrue($this->category->isDeleted());
     }
 
     public function testAddAndRemoveProduct(): void
