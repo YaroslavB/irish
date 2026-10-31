@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 
 #[Route(path: '/admin')]
-class DashbordController extends AbstractController
+class DashboardController extends AbstractController
 {
 
     /**

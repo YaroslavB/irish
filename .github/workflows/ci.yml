@@ -148,8 +148,20 @@ jobs:
           php bin/console doctrine:database:create --env=test --if-not-exists
           php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
+      # Full validation (mapping + DB sync): fails if migrations drift from entity mappings
+      - name: Validate Doctrine schema against migrated database
+        run: php bin/console doctrine:schema:validate --env=test
+
       - name: Run PHPUnit tests
-        run: vendor/bin/phpunit --coverage-text
+        run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml --log-junit=phpunit-report.xml
+
+      - name: Upload coverage for SonarCloud
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpunit-reports
+          path: |
+            coverage.xml
+            phpunit-report.xml
 
   security:
     name: Security Check
@@ -211,7 +223,8 @@ jobs:
       - name: Lint Container
         run: php bin/console lint:container
 
-      - name: Check Doctrine schema
+      # No DB in this job, so mapping only; the tests job runs the full sync check
+      - name: Check Doctrine mapping
         run: php bin/console doctrine:schema:validate --skip-sync
 
   sonarcloud:
@@ -224,30 +237,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      # Reuse the tests job's reports instead of re-running the suite
+      - name: Download PHPUnit reports
+        uses: actions/download-artifact@v4
         with:
-          php-version: '8.1'
-          extensions: intl, pdo_mysql, gd, zip, amqp
-          coverage: xdebug
-
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-interaction
-
-      - name: Run PHPUnit with coverage
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml --log-junit=phpunit-report.xml
-        continue-on-error: true
+          name: phpunit-reports
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v6
