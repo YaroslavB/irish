@@ -44,7 +44,7 @@ class MetricsController extends AbstractController
         
         // OPcache status
         if (function_exists('opcache_get_status')) {
-            $opcacheStatus = @opcache_get_status(false);
+            $opcacheStatus = opcache_get_status(false);
             if ($opcacheStatus !== false) {
                 $metrics[] = '# HELP php_opcache_hit_rate OPcache hit rate';
                 $metrics[] = '# TYPE php_opcache_hit_rate gauge';
